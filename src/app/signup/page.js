@@ -1,6 +1,5 @@
 import Image from 'next/image'
-import { FaGoogle, FaEnvelope, FaUser, FaPhone } from 'react-icons/fa'
-
+import { FaGoogle, FaEnvelope, FaUser, FaPhone, FaLock } from 'react-icons/fa'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,7 +9,6 @@ export default function SignupPage({ searchParams }) {
 
   return (
     <>
-  
       <form action="/signup/submit" method="POST">
         <div className="min-h-screen flex items-center justify-center bg-white border-t-1">
           <div className="w-full max-w-5xl flex">
@@ -72,6 +70,30 @@ export default function SignupPage({ searchParams }) {
                   name="phone"
                   type="tel"
                   placeholder="Phone Number"
+                  className="w-full bg-transparent outline-none text-sm"
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="flex items-center bg-gray-100 p-3 mb-4">
+                <FaLock className="text-gray-500 mr-3" />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  className="w-full bg-transparent outline-none text-sm"
+                  required
+                />
+              </div>
+
+              {/* Confirm Password */}
+              <div className="flex items-center bg-gray-100 p-3 mb-4">
+                <FaLock className="text-gray-500 mr-3" />
+                <input
+                  name="confirm_password"
+                  type="password"
+                  placeholder="Confirm Password"
                   className="w-full bg-transparent outline-none text-sm"
                   required
                 />

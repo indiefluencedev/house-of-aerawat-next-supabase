@@ -1,15 +1,15 @@
 import Image from 'next/image'
-import { FaGoogle, FaEnvelope } from 'react-icons/fa'
+import { FaGoogle, FaEnvelope, FaLock } from 'react-icons/fa'
 
 export const dynamic = 'force-dynamic'
 
-export default function LoginPage({ searchParams }) {
-  const error = searchParams?.error
-  const success = searchParams?.success
+export default async function LoginPage({ searchParams }) {
+  const params = await searchParams
+  const error = params?.error || null
+  const success = params?.success || null
 
   return (
     <>
-   
       <form action="/login/submit" method="POST">
         <div className="min-h-screen flex items-center justify-center bg-white border-t-1">
           <div className="w-full max-w-5xl flex">
@@ -25,7 +25,7 @@ export default function LoginPage({ searchParams }) {
             {/* Right Form */}
             <div className="w-1/2 p-10 border-l-2 border-gray-300">
               <h2 className="text-2xl font-bold mb-6 text-center">
-                Login via Email
+                Log in to your Account
               </h2>
 
               <button
@@ -42,6 +42,7 @@ export default function LoginPage({ searchParams }) {
                 <div className="flex-grow border-t border-gray-300" />
               </div>
 
+              {/* Email */}
               <div className="flex items-center bg-gray-100 p-3 mb-4">
                 <FaEnvelope className="text-gray-500 mr-3" />
                 <input
@@ -53,13 +54,37 @@ export default function LoginPage({ searchParams }) {
                 />
               </div>
 
+              {/* Password */}
+              <div className="flex items-center bg-gray-100 p-3 mb-4">
+                <FaLock className="text-gray-500 mr-3" />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  className="w-full bg-transparent outline-none text-sm"
+                  required
+                />
+              </div>
+
               <button
                 type="submit"
                 className="w-full bg-[#6e1a1a] text-white py-3 font-semibold hover:bg-[#5c1616] transition"
               >
-                Send Login Link
+                Log In
               </button>
 
+              {/* Login/Signup Toggle */}
+              <p className="text-sm text-center mt-4 text-gray-600">
+                New to Aerawat?{' '}
+                <a
+                  href="/signup"
+                  className="text-[#6e1a1a] font-semibold hover:underline"
+                >
+                  Sign up now.
+                </a>
+              </p>
+
+              {/* Messages */}
               {error && (
                 <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
               )}
@@ -70,7 +95,6 @@ export default function LoginPage({ searchParams }) {
           </div>
         </div>
       </form>
-  
     </>
   )
 }

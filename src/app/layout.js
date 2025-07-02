@@ -1,7 +1,7 @@
 // src/app/layout.js
 import './globals.css'
-import Navbar from '@/app/components/users/Header' // Your custom header component
-import Footer from '@/components/users/Footer' // Your custom footer component
+import Navbar from '@/components/Home/header' // Your custom header component
+//import Footer from '@/components/users/Footer' // Your custom footer component
 
 export const metadata = {
   title: 'House of Aerawat',
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
         <main className="max-w-screen-xl mx-auto">{children}</main>
 
         {/* ✅ Custom Footer */}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   )

@@ -1,8 +1,8 @@
 // src/components/Header.jsx
 import Image from 'next/image'
 import Link from 'next/link'
-import '@/app/css/header.css'
-import Logo from "../../../../public/assets/aerawat.svg"
+import '@/css/header.css'
+
 const Header = () => {
   return (
     <header>
@@ -47,7 +47,7 @@ const Header = () => {
 
         {/* Icons */}
         <div className="flex items-center space-x-4 mt-4 md:mt-0">
-          <Image src="/assets/person.svg" alt="Person Icon" width={24} height={24} className="w-6 h-6" />
+       <Link href="/login-check"><Image src="/assets/person.svg" alt="Person Icon" width={24} height={24} className="w-6 h-6" /></Link>
           <Image src="/assets/heart.svg" alt="Heart Icon" width={24} height={24} className="w-6 h-6" />
           <Link href="/cart">
             <Image src="/assets/chart.svg" alt="Cart Icon" width={24} height={24} className="w-6 h-6" />
