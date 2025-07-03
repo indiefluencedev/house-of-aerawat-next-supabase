@@ -1,13 +1,21 @@
 // src/app/page.js
 export const dynamic = 'force-dynamic'
 
-import Content from '@/components/Home/content'
+import HomeBanner from '@/components/Home/HomeBanner'
+import Gallery from '@/components/Home/Gallery'
+import PurchaseSupport from '@/components/Home/PurchaseSupport'
+import FeaturedProducts from '@/components/Home/FeaturedProducts'
+import RecentlyViewed from '@/components/Home/RecentlyViewed'
 import Link from 'next/link'
 
 export default function HomePage() {
   return (
-    <main className="p-10 text-center space-y-6">
-<Content/>
+    <main className="">
+<HomeBanner/>
+<Gallery/>
+<PurchaseSupport/>
+{/* <FeaturedProducts/> */}
+{/* <RecentlyViewed/> */}
     </main>
   )
 }

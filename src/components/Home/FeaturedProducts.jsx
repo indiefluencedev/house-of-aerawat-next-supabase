@@ -1,6 +1,6 @@
-import '/src/app/css/content.css'
+import '../../css/content.css';
 
-const Content4 = ({ products }) => {
+const FeaturedProducts = ({ products }) => {
 
 
   return (
@@ -10,7 +10,7 @@ const Content4 = ({ products }) => {
       </div>
       <h2 className="text-4xl font-bold text-gray-900 mb-8">Featured Products</h2>
 
-      
+
 
       <div className="mt-12 flex justify-center">
         <a href="#">
@@ -24,4 +24,4 @@ const Content4 = ({ products }) => {
   )
 }
 
-export default Content4
+export default FeaturedProducts;
