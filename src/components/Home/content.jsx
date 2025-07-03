@@ -1,7 +1,7 @@
 
 import { FaShoppingCart, FaClock, FaArrowUp } from 'react-icons/fa'
-import Frame from "../../../../public/assets/Frame.png"
-import image from "../../../../public/assets/image.jpg"
+import Frame from "@/../public/assets/Frame.png"
+import image from "@/../public/assets/image.jpg"
 
 const Content = () => {
   return (
