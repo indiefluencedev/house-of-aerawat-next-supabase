@@ -55,7 +55,7 @@ const Header = () => {
 
         {/* Icons */}
         <div className='flex items-center ml-2 space-x-4 mt-4 md:mt-0'>
-          <Link href='/login-check'>
+          <Link href='/auth/login'>
             <Image
               src='/assets/person.svg'
               alt='Person Icon'
