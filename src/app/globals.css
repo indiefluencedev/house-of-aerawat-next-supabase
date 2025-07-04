@@ -19,8 +19,12 @@
   }
 }
 
-body {
-  background: #fff;
-  color:black;
-  font-family: Arial, Helvetica, sans-serif;
+/* Kumbh Sans for p, h3, h4, h5, h6, div, span, a */
+p, h3, h4, h5, h6, div, span, a {
+  font-family: 'Kumbh Sans', sans-serif;
+}
+
+/* Lora for h1, h2 */
+h1, h2 {
+  font-family: 'Lora', serif;
 }

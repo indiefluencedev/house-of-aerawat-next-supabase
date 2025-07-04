@@ -1,6 +1,6 @@
 .new-class {
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 100%;
   letter-spacing: 5%;
   height: 35px;
@@ -8,10 +8,10 @@
 }
 
 .new-class2 {
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 300;
-  font-size: 14px;
+  /* font-family: "Montserrat", sans-serif; */
+  /* font-optical-sizing: auto; */
+  font-weight: 500;
+  font-size: 16px;
   line-height: 100%;
   letter-spacing: 0%;
 }
@@ -36,8 +36,8 @@
 }
 
 #logo {
-  width: 170px;
-  height: auto;
+  width: 290px;
+  height: 75px;
 }
 
 .icons {

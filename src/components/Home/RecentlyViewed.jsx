@@ -1,4 +1,4 @@
-import '@/app/css/content.css'
+import '../../css/content.css';
 
 const RecentlyViewed = () => {
   return (

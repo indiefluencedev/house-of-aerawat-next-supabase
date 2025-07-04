@@ -1,19 +1,8 @@
-.image{
-  height: 850px;
-}
-.con{
-  font-family: "Fraunces", serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "SOFT" 0,
-    "WONK" 0;
-}
+
 /*----------------------------------content2---------------------------------------------------*/
 .third{
-  font-family: "Fraunces", serif;
-  font-optical-sizing: auto;
+  /* font-family: "Fraunces", serif; */
+  /* font-optical-sizing: auto; */
   font-weight: 400;
   font-size: 22px;
   font-style: normal;
@@ -26,14 +15,14 @@
 }
 /*---------------------------------content3----------------------------------------------------*/
 .name{
-  font-family: "Fraunces", serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
+  /* font-family: "Fraunces", serif; */
+  /* font-optical-sizing: auto; */
+  /* font-weight: 700;
   font-size: 42px;
   font-style: normal;
   font-variation-settings:
     "SOFT" 0,
-    "WONK" 0;
+    "WONK" 0; */
 }
 /*---------------------------------content4----------------------------------------------------*/
 .botton{

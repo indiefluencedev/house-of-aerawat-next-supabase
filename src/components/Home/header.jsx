@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header>
       {/* Top Navigation Links */}
-      <div className='bg-[#6a1b1a] text-white py-2 px-4 flex justify-center space-x-6 text-sm new-class'>
+      <div className='bg-[#14397C] text-white py-2 px-4 flex justify-center space-x-3 text-[16px] new-class'>
         <a href='#' className='hover:underline'>
           Home
         </a>
@@ -27,11 +27,11 @@ const Header = () => {
         {/* Logo */}
         <div className='flex items-center'>
           <Image
-            src='../../../../assets/aerawat.svg'
+            src='/assets/newlogo.png'
             alt='Logo'
-            width={170}
-            height={50}
-            className='w-32 md:w-40'
+            width={290}
+            height={75}
+            className=' md:w-[290px]'
             priority
           />
         </div>
@@ -54,8 +54,8 @@ const Header = () => {
         </div>
 
         {/* Icons */}
-        <div className='flex items-center space-x-4 mt-4 md:mt-0'>
-          <Link href='/auth/register'>
+        <div className='flex items-center ml-2 space-x-4 mt-4 md:mt-0'>
+          <Link href='/login-check'>
             <Image
               src='/assets/person.svg'
               alt='Person Icon'
@@ -84,7 +84,7 @@ const Header = () => {
       </div>
 
       {/* Category Navigation */}
-      <div className='flex flex-wrap justify-center space-x-4 py-3 text-xs md:text-sm new-class2 gap-26 text-black'>
+      <div className='flex flex-wrap justify-center space-x-4 py-6 text-xs md:text-sm new-class2 gap-26 text-black'>
         <a href='#' className='hover:underline'>
           Fine Jewellery
         </a>
