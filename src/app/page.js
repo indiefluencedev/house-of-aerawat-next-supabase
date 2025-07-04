@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic';
 import HomeBanner from '@/components/Home/HomeBanner';
 import Gallery from '@/components/Home/Gallery';
 import PurchaseSupport from '@/components/Home/PurchaseSupport';
-import FeaturedProducts from '@/components/Home/FeaturedProducts';
+import HomeFeaturedProducts from '@/components/Home/HomeFeaturedProducts';
 import RecentlyViewed from '@/components/Home/RecentlyViewed';
 import Link from 'next/link';
 
@@ -14,8 +14,8 @@ export default function HomePage() {
       <HomeBanner />
       <Gallery />
       <PurchaseSupport />
-      {/* <FeaturedProducts/> */}
-      {/* <RecentlyViewed/> */}
+      <HomeFeaturedProducts/>
+      <RecentlyViewed/>
     </main>
   );
 }

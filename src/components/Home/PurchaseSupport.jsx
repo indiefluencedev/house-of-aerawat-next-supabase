@@ -1,4 +1,4 @@
-import '../../css/content.css';
+// import '../../css/content.css';
 
 const PurchaseSupport = () => {
   const cardData = [
@@ -18,7 +18,7 @@ const PurchaseSupport = () => {
 
   const CardComponent = ({ data, className = "" }) => (
     <div
-      className={` w-[380px] md:w-[317.33px] h-[155px] xl:w-[500px] xl:h-[186px] bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-xl p-4 xl:p-6 flex items-center gap-5 glass-card ${className}`}
+      className={` w-[320px] md:w-[317.33px] h-[155px] xl:w-[500px] xl:h-[186px] bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-xl p-4 xl:p-6 flex items-center gap-5 glass-card ${className}`}
       style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)' }}
     >
       <img src="/assets/leaf-icon.svg" alt="Leaf Icon" className="w-11 h-11" />
@@ -30,7 +30,7 @@ const PurchaseSupport = () => {
   );
 
   return (
-    <div className="relative w-full h-4/5 bg-white py-20 px-2 flex flex-col justify-center items-center">
+    <div className="relative w-full h-4/5 bg-white pt-10 pb-20 px-2 flex flex-col justify-center items-center">
       <p className="mb-8 font-bold tracking-wdie text-[28px] md:text-[38px]">Your Purchase Supports</p>
 
       <img

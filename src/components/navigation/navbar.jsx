@@ -1,13 +1,12 @@
 // src/components/Header.jsx
 import Image from 'next/image';
 import Link from 'next/link';
-import '@/css/header.css';
 
 const Header = () => {
   return (
     <header>
       {/* Top Navigation Links */}
-      <div className='bg-[#14397C] text-white py-2 px-4 flex justify-center space-x-3 text-[16px] new-class'>
+      <div className='bg-[#14397C] text-white py-2 px-4 flex justify-center space-x-12 text-[16px] new-class'>
         <a href='#' className='hover:underline'>
           Home
         </a>

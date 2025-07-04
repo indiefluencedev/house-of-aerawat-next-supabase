@@ -1,5 +1,5 @@
 // src/components/Content2.jsx
-import '../../css/content.css'
+// import '../../css/content.css'
 
 const cards = [
   { image: '/assets/img4.jpg',title: 'Fine Jewellery' },
