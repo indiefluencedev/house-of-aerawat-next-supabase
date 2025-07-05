@@ -1,11 +1,11 @@
 import '@/css/Footer.css'
 
 const Footer = () => {
-  return ( 
+  return (
     <footer className="flex flex-col items-center text-center space-y-10 py-10 bg-gray-100">
       <div className="flex flex-col items-center space-y-4">
         <img src="/assets/aerawat.svg" alt="House of Aerawat" className="w-full h-24" />
-        <p className="max-w-3xl text-sm text-gray-600">
+        <p className="max-w-3xl text-[16px] text-gray-600">
           Lorem ipsum dolor sit amet consectetur. Felis sit lorem eleifend
           scelerisque odio tincidunt. Lorem ipsum dolor sit amet consectetur.
           Felis sit lorem eleifend scelerisque odio tincidunt.

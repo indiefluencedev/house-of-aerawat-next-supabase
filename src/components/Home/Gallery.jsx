@@ -22,14 +22,14 @@ const Gallery = () => {
             {cards.slice(0, 3).map((card, index) => (
               <div
                 key={index}
-                className={`${index === 0 ?  'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card`}
+                className={`${index === 0 ?  'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
               >
-                <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+                <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 {/* Gradient overlay that fades from transparent to white */}
-                <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent"></div>
+                <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
                 {/* Text container */}
-                <div className="absolute bottom-0 w-full text-center py-3">
-                  <h3 className="text-[#14397C] font-semibold">{card.title}</h3>
+                <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
+                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
                 </div>
               </div>
             ))}
@@ -40,14 +40,14 @@ const Gallery = () => {
             {cards.slice(3).map((card, index) => (
               <div
                 key={index + 3}
-                className={`${index === 2 ? 'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card`}
+                className={`${index === 2 ? 'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
               >
-                <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+                <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 {/* Gradient overlay that fades from transparent to white */}
-                <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent"></div>
+                <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
                 {/* Text container */}
-                <div className="absolute bottom-0 w-full text-center py-3">
-                  <h3 className="text-[#14397C] font-semibold">{card.title}</h3>
+                <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
+                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
                 </div>
               </div>
             ))}
@@ -59,14 +59,14 @@ const Gallery = () => {
           {cards.map((card, index) => (
             <div
               key={index}
-              className="w-full h-[280px] sm:h-[320px] md:h-[350px] rounded-[8px] border border-gray-300 overflow-hidden relative card"
+              className="w-full h-[280px] sm:h-[320px] md:h-[350px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             >
-              <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+              <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
               {/* Gradient overlay that fades from transparent to white */}
-              <div className="absolute bottom-0 w-full h-[180px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent"></div>
+              <div className="absolute bottom-0 w-full h-[180px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
               {/* Text container */}
-              <div className="absolute bottom-0 w-full text-center py-3">
-                <h3 className="text-[#14397C] font-semibold text-sm sm:text-base">{card.title}</h3>
+              <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
+                <h3 className="text-[#14397C] text-[20px] font-semibold text-sm sm:text-base transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
               </div>
             </div>
           ))}

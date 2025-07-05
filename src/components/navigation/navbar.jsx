@@ -7,16 +7,16 @@ const Header = () => {
     <header>
       {/* Top Navigation Links */}
       <div className='bg-[#14397C] text-white py-2 px-4 flex justify-center space-x-12 text-[16px] new-class'>
-        <a href='#' className='hover:underline'>
+        <a href='/' className='hover:underline'>
           Home
         </a>
-        <a href='#' className='hover:underline'>
+        <a href='/products' className='hover:underline'>
           Explore All Products
         </a>
-        <a href='#' className='hover:underline'>
+        <a href='/about' className='hover:underline'>
           About Us
         </a>
-        <a href='#' className='hover:underline'>
+        <a href='/contact' className='hover:underline'>
           Get in Touch
         </a>
       </div>

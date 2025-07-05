@@ -123,9 +123,9 @@ export default function MobileHeader() {
               <a href="#" className="py-2 hover:underline">Your Orders</a>
               <a href="#" className="py-2 hover:underline">Your Addresses</a>
             </div>
-            <a href="#" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">About House Of Aerawat</a>
-            <a href="#" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">Legal</a>
-            <a href="#" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">Get In Touch</a>
+            <a href="/about" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">About House Of Aerawat</a>
+            <a href="/legal" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">Legal</a>
+            <a href="/contact" className="px-6 py-3 text-[16px] font-medium hover:bg-gray-100 transition">Get In Touch</a>
           </div>
         </div>
       </div>

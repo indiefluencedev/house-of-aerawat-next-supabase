@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import products from '../../Data/products';
 
@@ -7,24 +7,57 @@ function RecentlyViewed() {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const carouselRef = useRef(null);
+
+  // Touch/swipe state
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   // Calculate how many cards to show based on screen size
   const [cardsToShow, setCardsToShow] = useState(4);
-  const [cardWidth, setCardWidth] = useState(25); // 25% for 4 cards
+  const [cardWidth, setCardWidth] = useState(20); // Width percentage for each card
+
+  // Minimum swipe distance (in px) to trigger slide
+  const minSwipeDistance = 50;
+
+  useEffect(() => {
+    // Detect if device supports touch
+    const checkTouchDevice = () => {
+      setIsTouchDevice(
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
+      );
+    };
+
+    checkTouchDevice();
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
-      if (width < 768) {
+      if (width <= 320) {
+        setCardsToShow(1);
+        setCardWidth(100); // 100% width for 320px (1 card fully visible)
+      } else if (width <= 375) {
+        setCardsToShow(1);
+        setCardWidth(92); // 80% width for 375px (1 card fully visible + 20% of 2nd card)
+      } else if (width <= 360) {
+        setCardsToShow(1);
+        setCardWidth(100); // 80% width for 360px (1 card fully visible + 20% of 2nd card)
+      } else if (width < 480) {
         setCardsToShow(2);
-        setCardWidth(50); // 50% for 2 cards on mobile
-      } else if (width < 1024) {
-        setCardsToShow(3);
-        setCardWidth(33.33); // 33.33% for 3 cards on tablet
-      } else {
+        setCardWidth(50); // 50% width for mobile (2 cards)
+      } else if (width >= 1024) {
         setCardsToShow(4);
-        setCardWidth(25); // 25% for 4 cards on desktop
+        setCardWidth(24); // 20% width (4 full cards + 20% of 5th card visible)
       }
+      else if (width >= 768) {
+        setCardsToShow(3);
+        setCardWidth(30); // 20% width (4 full cards + 20% of 5th card visible)
+      }
+
     };
 
     handleResize();
@@ -49,16 +82,48 @@ function RecentlyViewed() {
     setTimeout(() => setIsTransitioning(false), 300);
   };
 
+  // Touch event handlers
+  const onTouchStart = (e) => {
+    // Only enable touch on mobile/tablet screens (< 1024px)
+    if (window.innerWidth >= 1024 || !isTouchDevice) return;
+
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    // Only enable touch on mobile/tablet screens (< 1024px)
+    if (window.innerWidth >= 1024 || !isTouchDevice) return;
+
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    // Only enable touch on mobile/tablet screens (< 1024px)
+    if (window.innerWidth >= 1024 || !isTouchDevice) return;
+
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currentSlide < totalSlides) {
+      nextSlide();
+    } else if (isRightSwipe && currentSlide > 0) {
+      prevSlide();
+    }
+  };
+
   // Calculate the transform value to slide one card at a time
   const getTransform = () => {
-    // Each slide moves by one card width (100% / total cards)
-    const singleCardWidth = 100 / products.products.length;
-    const baseTransform = currentSlide * singleCardWidth;
+    // Each slide moves by one card width
+    const baseTransform = currentSlide * cardWidth;
     return `translateX(-${baseTransform}%)`;
   };
 
   return (
-    <div className="max-w-[1340px] mx-auto px-4 py-8">
+    <div className="max-w-[1340px] mx-auto px-4 py-16">
       {/* Top description text */}
       <p className="text-gray-600 mb-2 text-left">
         Lorem ipsum dolor sit amet consectetur.
@@ -70,26 +135,41 @@ function RecentlyViewed() {
       {/* Carousel Container */}
       <div className="relative">
         {/* Products carousel */}
-        <div className="overflow-hidden rounded-lg">
+        <div
+          className="overflow-hidden rounded-lg"
+          ref={carouselRef}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <div
             className="flex transition-transform duration-300 ease-in-out"
             style={{
               transform: getTransform(),
-              width: `${products.products.length * (95 / cardsToShow)}%`
             }}
           >
             {products.products.map((product, index) => (
               <div
                 key={product.id}
                 className="flex-shrink-0 px-2"
-                style={{ width: `${100 / products.products.length}%` }}
+                style={{ width: `${cardWidth}%` }}
               >
                 <div
                   className="group overflow-hidden cursor-pointer"
                   onClick={() => router.push(`/products/${product.id}`)}
                 >
                   {/* Image container */}
-                  <div className="h-[220px] rounded-[6px] md:rounded-[8px] md:h-[271px] xl:h-[380px] w-full relative overflow-hidden">
+                  <div
+                    className="rounded-[6px] md:rounded-[8px] w-full relative overflow-hidden"
+                    style={{
+                      height: window.innerWidth <= 375 ? '270px' :
+                             window.innerWidth <= 360 ? '270px' :
+                             window.innerWidth <= 320 ? '320px' :
+                             window.innerWidth >= 640 && window.innerWidth < 768 ? '320px' :
+                             window.innerWidth >= 768 && window.innerWidth < 1280 ? '270px' :
+                             window.innerWidth >= 1280 ? '390px' : '250px'
+                    }}
+                  >
                     <img
                       src={product.image}
                       alt={product.name}
@@ -128,7 +208,7 @@ function RecentlyViewed() {
           <button
             onClick={prevSlide}
             disabled={isTransitioning || currentSlide <= 0}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               className="w-5 h-5 text-gray-600 transform rotate-180"
@@ -140,29 +220,10 @@ function RecentlyViewed() {
             </svg>
           </button>
 
-          {/* Slide indicators */}
-          {/* <div className="flex gap-2">
-            {Array.from({ length: totalSlides }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  if (!isTransitioning) {
-                    setIsTransitioning(true);
-                    setCurrentSlide(index);
-                    setTimeout(() => setIsTransitioning(false), 300);
-                  }
-                }}
-                className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                  index === currentSlide ? 'bg-[#14397C]' : 'bg-gray-300'
-                }`}
-              />
-            ))}
-          </div> */}
-
           <button
             onClick={nextSlide}
             disabled={isTransitioning || currentSlide >= totalSlides}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               className="w-5 h-5 text-gray-600"
@@ -175,8 +236,6 @@ function RecentlyViewed() {
           </button>
         </div>
       </div>
-
-
     </div>
   );
 }
