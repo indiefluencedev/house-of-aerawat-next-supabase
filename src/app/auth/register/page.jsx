@@ -1,9 +1,11 @@
 // app/auth/register/page.jsx - Registration page with client-side form handling
 'use client';
 
-import { FaGoogle, FaEnvelope, FaUser, FaPhone, FaLock } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import { FiPhone } from 'react-icons/fi';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,19 +53,20 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-white border-t-1'>
-      <div className='w-full max-w-5xl flex py-8'>
+    <div className='min-h-screen flex items-center justify-center mt-10'>
+      <div className='w-full max-w-5xl flex py-10'>
         {/* Left Image */}
-        <div className='w-1/2 flex flex-col items-center justify-center bg-white p-10'>
-          <img
-            src='/assets/aera.svg'
+        <div className='w-1/2 flex flex-col items-center justify-center p-10'>
+          <Image
+            src='/assets/verticalLogo.jpg'
             alt='House Of Aerawat'
-            className='w-[400px] h-[398px]'
+            width={354}
+            height={450}
           />
         </div>
 
         {/* Right Form */}
-        <div className='w-1/2 px-10 py-5 border-l-2 border-gray-300'>
+        <div className='w-1/2 p-10 border-l-2 border-gray-300'>
           <h2 className='text-2xl font-bold mb-6 text-center'>
             Create a New Account
           </h2>
@@ -72,7 +75,7 @@ export default function RegisterPage() {
             type='button'
             className='w-full flex items-center justify-center border border-black py-3 mb-6 text-black font-semibold hover:bg-gray-100 transition'
           >
-            <FaGoogle className='mr-3' />
+            <FcGoogle className='mr-3' />
             Sign up with Google
           </button>
 
@@ -85,11 +88,17 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit}>
             {/* Name */}
             <div className='flex items-center bg-gray-100 p-3 mb-4'>
-              <FaUser className='text-gray-500 mr-3' />
+              <Image
+                src='/assets/svgs/user.svg'
+                alt='User'
+                width={20}
+                height={20}
+                className='mr-3 font-light'
+              />
               <input
                 name='name'
                 type='text'
-                placeholder='Full Name'
+                placeholder='Joe Smith'
                 className='w-full bg-transparent outline-none text-sm'
                 required
                 disabled={isLoading}
@@ -98,7 +107,13 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div className='flex items-center bg-gray-100 p-3 mb-4'>
-              <FaEnvelope className='text-gray-500 mr-3' />
+              <Image
+                src={'/assets/svgs/envelope.svg'}
+                alt='Envelope'
+                width={20}
+                height={20}
+                className='mr-3'
+              />
               <input
                 name='email'
                 type='email'
@@ -111,11 +126,11 @@ export default function RegisterPage() {
 
             {/* Phone */}
             <div className='flex items-center bg-gray-100 p-3 mb-4'>
-              <FaPhone className='text-gray-500 mr-3' />
+              <FiPhone className='w-[20px] h-[20px] mr-3' />
               <input
                 name='phone'
                 type='tel'
-                placeholder='Phone Number'
+                placeholder='9876543210'
                 className='w-full bg-transparent outline-none text-sm'
                 required
                 disabled={isLoading}
@@ -124,11 +139,17 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div className='flex items-center bg-gray-100 p-3 mb-4'>
-              <FaLock className='text-gray-500 mr-3' />
+              <Image
+                src='/assets/svgs/lock.svg'
+                alt='Lock'
+                width={20}
+                height={20}
+                className='mr-3'
+              />
               <input
                 name='password'
                 type='password'
-                placeholder='Password'
+                placeholder='********'
                 className='w-full bg-transparent outline-none text-sm'
                 required
                 disabled={isLoading}
@@ -137,11 +158,17 @@ export default function RegisterPage() {
 
             {/* Confirm Password */}
             <div className='flex items-center bg-gray-100 p-3 mb-4'>
-              <FaLock className='text-gray-500 mr-3' />
+              <Image
+                src='/assets/svgs/lock.svg'
+                alt='Lock'
+                width={20}
+                height={20}
+                className='mr-3'
+              />
               <input
                 name='confirm_password'
                 type='password'
-                placeholder='Confirm Password'
+                placeholder='********'
                 className='w-full bg-transparent outline-none text-sm'
                 required
                 disabled={isLoading}
@@ -151,7 +178,7 @@ export default function RegisterPage() {
             <button
               type='submit'
               disabled={isLoading}
-              className='w-full bg-[#6e1a1a] text-white py-3 font-semibold hover:bg-[#5c1616] transition disabled:opacity-50'
+              className='w-full bg-[#14397C] text-white py-3 font-semibold hover:bg-[#D4AF37] hover:text-[#14397C] transition disabled:opacity-50'
             >
               {isLoading ? 'Creating Account...' : 'Sign Up'}
             </button>
@@ -169,7 +196,7 @@ export default function RegisterPage() {
             Already have an account?{' '}
             <a
               href='/auth/login'
-              className='text-[#6e1a1a] font-semibold hover:underline'
+              className='text-[#14397C] font-semibold hover:underline'
             >
               Log in here.
             </a>

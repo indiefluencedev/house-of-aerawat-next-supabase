@@ -2,7 +2,7 @@
 import { serverProductService } from '@/lib/services/productService';
 <Link
   href='/api/auth/logout'
-  className='bg-[#6e1a1a] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
+  className='bg-[#14397C] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
 >
   Logout
 </Link>;
@@ -52,7 +52,7 @@ export default async function ProductsPage({ searchParams }) {
             <div className='flex items-center space-x-4'>
               <Link
                 href='/'
-                className='text-[#6e1a1a] hover:text-[#5c1616] font-medium'
+                className='text-[#14397C] hover:text-[#5c1616] font-medium'
               >
                 Home
               </Link>
@@ -60,19 +60,19 @@ export default async function ProductsPage({ searchParams }) {
                 <>
                   <Link
                     href='/dashboard'
-                    className='text-[#6e1a1a] hover:text-[#5c1616] font-medium'
+                    className='text-[#14397C] hover:text-[#5c1616] font-medium'
                   >
                     Dashboard
                   </Link>
                   <Link
                     href='/wishlist'
-                    className='text-[#6e1a1a] hover:text-[#5c1616] font-medium'
+                    className='text-[#14397C] hover:text-[#5c1616] font-medium'
                   >
                     Wishlist
                   </Link>
                   <Link
                     href='/logout'
-                    className='bg-[#6e1a1a] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
+                    className='bg-[#14397C] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
                   >
                     Logout
                   </Link>
@@ -81,13 +81,13 @@ export default async function ProductsPage({ searchParams }) {
                 <>
                   <Link
                     href='/auth/login'
-                    className='text-[#6e1a1a] hover:text-[#5c1616] font-medium'
+                    className='text-[#14397C] hover:text-[#5c1616] font-medium'
                   >
                     Login
                   </Link>
                   <Link
                     href='/auth/register'
-                    className='bg-[#6e1a1a] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
+                    className='bg-[#14397C] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition'
                   >
                     Register
                   </Link>
@@ -109,11 +109,11 @@ export default async function ProductsPage({ searchParams }) {
                   name='search'
                   placeholder='Search products...'
                   defaultValue={search || ''}
-                  className='flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#6e1a1a]'
+                  className='flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#14397C]'
                 />
                 <button
                   type='submit'
-                  className='px-6 py-2 bg-[#6e1a1a] text-white rounded-md hover:bg-[#5c1616] transition'
+                  className='px-6 py-2 bg-[#14397C] text-white rounded-md hover:bg-[#5c1616] transition'
                 >
                   Search
                 </button>
@@ -124,7 +124,7 @@ export default async function ProductsPage({ searchParams }) {
                 href='/products'
                 className={`px-4 py-2 rounded-md transition ${
                   !category && !search
-                    ? 'bg-[#6e1a1a] text-white'
+                    ? 'bg-[#14397C] text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -134,7 +134,7 @@ export default async function ProductsPage({ searchParams }) {
                 href='/products?category=jewelry'
                 className={`px-4 py-2 rounded-md transition ${
                   category === 'jewelry'
-                    ? 'bg-[#6e1a1a] text-white'
+                    ? 'bg-[#14397C] text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -144,7 +144,7 @@ export default async function ProductsPage({ searchParams }) {
                 href='/products?category=accessories'
                 className={`px-4 py-2 rounded-md transition ${
                   category === 'accessories'
-                    ? 'bg-[#6e1a1a] text-white'
+                    ? 'bg-[#14397C] text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
@@ -183,12 +183,12 @@ export default async function ProductsPage({ searchParams }) {
                     {product.description}
                   </p>
                   <div className='flex items-center justify-between'>
-                    <span className='text-xl font-bold text-[#6e1a1a]'>
+                    <span className='text-xl font-bold text-[#14397C]'>
                       ₹{product.price}
                     </span>
                     <Link
                       href={`/products/${product.id}`}
-                      className='bg-[#6e1a1a] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition text-sm'
+                      className='bg-[#14397C] text-white px-4 py-2 rounded hover:bg-[#5c1616] transition text-sm'
                     >
                       View Details
                     </Link>
@@ -202,7 +202,7 @@ export default async function ProductsPage({ searchParams }) {
             <p className='text-gray-500 text-lg'>No products found.</p>
             <Link
               href='/products'
-              className='inline-block mt-4 text-[#6e1a1a] hover:text-[#5c1616] font-medium'
+              className='inline-block mt-4 text-[#14397C] hover:text-[#5c1616] font-medium'
             >
               View All Products
             </Link>
