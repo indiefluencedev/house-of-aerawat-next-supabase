@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { serverAuthService } from '@/lib/services/authService';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { productService } from '@/lib/services/productService';
 
 /**
@@ -9,22 +9,68 @@ import { productService } from '@/lib/services/productService';
  */
 export async function verifyAdminAuth() {
   const cookieStore = await cookies();
-  const userId = cookieStore.get('user_id')?.value;
-  const isAdmin = cookieStore.get('is_admin')?.value;
+  const authToken = cookieStore.get('supabase-auth-token')?.value;
 
-  if (!userId) {
+  if (!authToken) {
     redirect('/auth/login');
   }
 
-  if (isAdmin !== 'true') {
+  const supabase = createSupabaseServerClient();
+
+  // Get current session
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    redirect('/auth/login');
+  }
+
+  // Get user profile for role check
+  const { data: user, error: userError } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  // Check auth metadata if profile doesn't exist
+  let userRole = 'user';
+  if (userError && userError.code === 'PGRST116') {
+    userRole = session.user.user_metadata?.role || 'user';
+
+    // Create profile from auth data if it doesn't exist
+    const { data: newProfile } = await supabase
+      .from('user_profiles')
+      .insert([
+        {
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.name || 'User',
+          phone: session.user.user_metadata?.phone || '',
+          role: userRole,
+          provider: session.user.app_metadata?.provider || 'email',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ])
+      .select()
+      .single();
+
+    user = newProfile;
+  } else if (userError) {
+    redirect('/auth/login');
+  } else {
+    userRole = user.role;
+  }
+
+  // Check if user is admin
+  if (userRole !== 'admin') {
     redirect('/dashboard');
   }
 
-  // Get admin user data
-  const userResult = await serverAuthService.getUserById(userId);
-
   return {
-    user: userResult.success ? userResult.user : null,
+    user,
     isAdmin: true,
   };
 }
