@@ -1,66 +1,103 @@
-// app/api/auth/login/route.js - Login API endpoint
+// app/api/auth/login/route.js
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
-import { serverAuthService } from '@/lib/services/authService';
+import { cookies } from 'next/headers';
 
-export async function POST(req) {
+export async function POST(request) {
   try {
-    const body = await req.json();
-    const { email, password } = body;
+    const { email, password } = await request.json();
 
+    // Validation
     if (!email || !password) {
       return NextResponse.json(
-        { error: 'Missing email or password' },
+        { success: false, error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    // Use the auth service to validate credentials
-    const result = await serverAuthService.getUserFromCustomAuth(
-      email,
-      password
-    );
+    const supabase = createSupabaseServerClient();
 
-    if (!result.success) {
+    // Sign in user (authenticates against auth.users table)
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+    if (authError) {
+      console.error('Auth error:', authError);
+
+      // Check if it's an email not confirmed error
+      if (authError.message?.includes('Email not confirmed')) {
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              'Please verify your email before logging in. Check your inbox for the verification link.',
+          },
+          { status: 401 }
+        );
+      }
+
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { success: false, error: 'Invalid email or password' },
         { status: 401 }
       );
     }
 
-    const { user } = result;
+    if (!authData.user) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication failed' },
+        { status: 401 }
+      );
+    }
 
-    // Create response with user data
-    const response = NextResponse.json({
+    // Check if email is verified for email providers
+    if (
+      authData.user.app_metadata?.provider === 'email' &&
+      !authData.user.email_confirmed_at
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Please verify your email before logging in. Check your inbox for the verification link.',
+        },
+        { status: 401 }
+      );
+    }
+
+    // Get user metadata for role determination
+    const role = authData.user.user_metadata?.role || 'user';
+    const displayName = authData.user.user_metadata?.name || 'User';
+
+    // Set auth cookie
+    const cookieStore = await cookies();
+    cookieStore.set('supabase-auth-token', authData.session.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    // Determine redirect based on role
+    const redirectPath = role === 'admin' ? '/admin' : '/dashboard';
+
+    return NextResponse.json({
       success: true,
+      message: 'Login successful',
       user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        is_admin: user.is_admin,
+        id: authData.user.id,
+        email: authData.user.email,
+        name: displayName,
+        role: role,
       },
-      redirect: user.is_admin ? '/admin/dashboard' : '/dashboard',
+      redirect: redirectPath,
     });
-
-    // Set user session cookies
-    response.cookies.set('user_id', user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    response.cookies.set('is_admin', String(user.is_admin), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
-    return response;
   } catch (error) {
-    console.error('Login API error:', error);
+    console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Something went wrong' },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     );
   }

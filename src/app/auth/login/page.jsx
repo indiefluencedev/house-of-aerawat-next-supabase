@@ -1,16 +1,59 @@
-// app/auth/login/page.jsx - Login page with client-side form handling
+// app/auth/login/page.jsx - Updated Login page
 'use client';
 
 import { FcGoogle } from 'react-icons/fc';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { AuthService } from '@/lib/services/authService';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Check for URL parameters
+    const urlError = searchParams.get('error');
+    const verified = searchParams.get('verified');
+
+    if (urlError) {
+      switch (urlError) {
+        case 'no_code':
+          setError('Authorization code not received');
+          break;
+        case 'session_error':
+          setError('Failed to create session');
+          break;
+        case 'no_user':
+          setError('No user found');
+          break;
+        case 'callback_error':
+          setError('Authentication callback failed');
+          break;
+        case 'profile_creation_failed':
+          setError('Failed to create user profile');
+          break;
+        case 'table_not_found':
+          setError('Database not properly configured. Please contact support.');
+          break;
+        case 'database_error':
+          setError(
+            'Database error occurred. Please try again or contact support.'
+          );
+          break;
+        default:
+          setError('Authentication failed');
+      }
+    }
+
+    if (verified === 'true') {
+      setSuccess('Email verified successfully! You can now log in.');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,28 +66,36 @@ export default function LoginPage() {
     const password = formData.get('password');
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const result = await AuthService.login(email, password);
 
-      const data = await response.json();
-
-      if (data.success) {
+      if (result.success) {
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push(data.redirect);
+          router.push(result.redirect || '/dashboard');
         }, 1000);
       } else {
-        setError(data.error || 'Login failed');
+        setError(result.error || 'Login failed');
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    setError('');
+
+    try {
+      const result = await AuthService.signInWithGoogle();
+      if (!result.success) {
+        setError(result.error || 'Google sign-in failed');
+      }
+    } catch (err) {
+      setError('Google sign-in failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -69,10 +120,12 @@ export default function LoginPage() {
 
           <button
             type='button'
-            className='w-full flex items-center justify-center border border-black py-3 mb-6 text-black font-semibold hover:bg-gray-100 transition'
+            onClick={handleGoogleSignIn}
+            disabled={isGoogleLoading}
+            className='w-full flex items-center justify-center border border-black py-3 mb-6 text-black font-semibold hover:bg-gray-100 transition disabled:opacity-50'
           >
             <FcGoogle className='mx-3 w-5 h-5' />
-            Login using Google Account
+            {isGoogleLoading ? 'Signing in...' : 'Login using Google Account'}
           </button>
 
           <div className='flex items-center my-4'>
@@ -120,7 +173,7 @@ export default function LoginPage() {
               />
             </div>
 
-            <p className='text-sm text-right hover:underline'>
+            <p className='text-sm text-right hover:underline cursor-pointer'>
               Forgot Password?
             </p>
 

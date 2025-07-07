@@ -1,8 +1,148 @@
 // src/components/Header.jsx
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { AuthService } from '@/lib/services/authService';
 
 const Header = () => {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+
+    // Listen for auth state changes
+    const handleAuthChange = (event, session) => {
+      if (event === 'SIGNED_IN') {
+        checkAuth();
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setIsLoading(false);
+      }
+    };
+
+    // Set up auth state listener
+    const {
+      data: { subscription },
+    } = AuthService.onAuthStateChange(handleAuthChange);
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const currentUser = await AuthService.getCurrentUser();
+      setUser(currentUser);
+    } catch (error) {
+      console.error('Error checking auth:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const result = await AuthService.logout();
+      if (result.success) {
+        setUser(null);
+        setShowUserMenu(false);
+        // Redirect to home page after logout
+        window.location.href = '/';
+      } else {
+        console.error('Logout failed:', result.error);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const getUserDashboardLink = () => {
+    if (!user) return '/auth/login';
+    return user.role === 'admin' ? '/admin' : '/dashboard';
+  };
+
+  const renderUserIcon = () => {
+    if (isLoading) {
+      return (
+        <div className='w-6 h-6 bg-gray-300 rounded-full animate-pulse'></div>
+      );
+    }
+
+    if (user) {
+      return (
+        <div className='relative'>
+          <button
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            className='flex items-center space-x-2 focus:outline-none'
+          >
+            <Image
+              src='/assets/svgs/user.svg'
+              alt='User Profile'
+              width={24}
+              height={24}
+              className='w-6 h-6'
+            />
+            <span className='hidden md:inline text-sm'>
+              {user.profile?.name || user.user_metadata?.name || 'User'}
+            </span>
+          </button>
+
+          {showUserMenu && (
+            <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50'>
+              <div className='py-2'>
+                <div className='px-4 py-2 text-sm text-gray-700 border-b'>
+                  <div className='font-medium'>
+                    {user.profile?.name || user.user_metadata?.name || 'User'}
+                  </div>
+                  <div className='text-xs text-gray-500'>{user.email}</div>
+                </div>
+                <Link
+                  href={getUserDashboardLink()}
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  onClick={() => setShowUserMenu(false)}
+                >
+                  {user.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+                </Link>
+                <Link
+                  href='/profile'
+                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  onClick={() => setShowUserMenu(false)}
+                >
+                  Profile Settings
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className='block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100'
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <Link href='/auth/login'>
+        <Image
+          src='/assets/svgs/user.svg'
+          alt='Login'
+          width={24}
+          height={24}
+          className='w-6 h-6'
+        />
+      </Link>
+    );
+  };
+
   return (
     <header>
       {/* Top Navigation Links */}
@@ -25,14 +165,16 @@ const Header = () => {
       <div className='flex flex-wrap items-center justify-between px-4 py-4 border-b'>
         {/* Logo */}
         <div className='flex items-center'>
-          <Image
-            src='/assets/newlogo.png'
-            alt='Logo'
-            width={290}
-            height={75}
-            className=' md:w-[290px]'
-            priority
-          />
+          <Link href='/'>
+            <Image
+              src='/assets/newlogo.png'
+              alt='Logo'
+              width={290}
+              height={75}
+              className=' md:w-[290px]'
+              priority
+            />
+          </Link>
         </div>
 
         {/* Search */}
@@ -54,21 +196,13 @@ const Header = () => {
 
         {/* Icons */}
         <div className='flex items-center ml-2 space-x-4 mt-4 md:mt-0'>
-          <Link href='/auth/login'>
-            <Image
-              src='/assets/svgs/user.svg'
-              alt='Person Icon'
-              width={24}
-              height={24}
-              className='w-6 h-6'
-            />
-          </Link>
+          {renderUserIcon()}
           <Image
             src='/assets/heart.svg'
             alt='Heart Icon'
             width={24}
             height={24}
-            className='w-6 h-6'
+            className='w-6 h-6 cursor-pointer'
           />
           <Link href='/cart'>
             <Image

@@ -1,29 +1,80 @@
 // app/dashboard/page.jsx - User profile dashboard
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { serverAuthService } from '@/lib/services/authService';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import UserLayout from '@/components/layouts/userLayout';
 
 export const dynamic = 'force-dynamic';
 
 export default async function UserDashboard() {
   const cookieStore = await cookies();
-  const userId = cookieStore.get('user_id')?.value;
-  const isAdmin = cookieStore.get('is_admin')?.value;
+  const authToken = cookieStore.get('supabase-auth-token')?.value;
 
   // If not logged in, redirect to login
-  if (!userId) {
+  if (!authToken) {
+    redirect('/auth/login');
+  }
+
+  const supabase = createSupabaseServerClient();
+
+  // Get current session
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
+  if (sessionError || !session) {
+    redirect('/auth/login');
+  }
+
+  // Get user profile for dashboard display
+  const { data: user, error: userError } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  // If profile doesn't exist, create it from auth user data
+  if (userError && userError.code === 'PGRST116') {
+    const { data: newProfile } = await supabase
+      .from('user_profiles')
+      .insert([
+        {
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.name || 'User',
+          phone: session.user.user_metadata?.phone || '',
+          role: session.user.user_metadata?.role || 'user',
+          provider: session.user.app_metadata?.provider || 'email',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ])
+      .select()
+      .single();
+
+    if (newProfile) {
+      // Use the newly created profile
+      user = newProfile;
+    } else {
+      // Fallback to auth user data
+      user = {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.user_metadata?.name || 'User',
+        phone: session.user.user_metadata?.phone || '',
+        role: session.user.user_metadata?.role || 'user',
+      };
+    }
+  } else if (userError) {
+    // Other error, redirect to login
     redirect('/auth/login');
   }
 
   // If admin, redirect to admin dashboard
-  if (isAdmin === 'true') {
-    redirect('/admin/dashboard');
+  if (user.role === 'admin') {
+    redirect('/admin');
   }
-
-  // Get user data
-  const userResult = await serverAuthService.getUserById(userId);
-  const user = userResult.success ? userResult.user : null;
 
   return (
     <UserLayout user={user}>

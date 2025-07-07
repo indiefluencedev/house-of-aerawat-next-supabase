@@ -1,6 +1,5 @@
 // lib/supabase/server.js - Server-side Supabase instance
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -21,19 +20,35 @@ export const createSupabaseServerClient = () => {
 
 // Server-side client that respects user auth context
 export const createSupabaseServerClientWithAuth = async () => {
-  const cookieStore = await cookies();
+  // Only import cookies when actually needed (in server context)
+  if (typeof window === 'undefined') {
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
 
+    return createClient(
+      supabaseUrl,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${
+              cookieStore.get('supabase-auth-token')?.value || ''
+            }`,
+          },
+        },
+      }
+    );
+  }
+
+  // Return regular client for client-side usage
   return createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
     auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-    global: {
-      headers: {
-        Authorization: `Bearer ${
-          cookieStore.get('supabase-auth-token')?.value || ''
-        }`,
-      },
+      autoRefreshToken: true,
+      persistSession: true,
     },
   });
 };

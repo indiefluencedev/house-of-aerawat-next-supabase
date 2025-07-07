@@ -1,4 +1,4 @@
-// app/auth/register/page.jsx - Registration page with client-side form handling
+// app/auth/register/page.jsx - Updated Registration page
 'use client';
 
 import { FcGoogle } from 'react-icons/fc';
@@ -6,9 +6,11 @@ import { FiPhone } from 'react-icons/fi';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { AuthService } from '@/lib/services/authService';
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
@@ -20,35 +22,47 @@ export default function RegisterPage() {
     setSuccess('');
 
     const formData = new FormData(e.target);
-    const email = formData.get('email');
-    const name = formData.get('name');
-    const phone = formData.get('phone');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirm_password');
+    const userData = {
+      email: formData.get('email'),
+      name: formData.get('name'),
+      phone: formData.get('phone'),
+      password: formData.get('password'),
+      confirmPassword: formData.get('confirm_password'),
+    };
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, name, phone, password, confirmPassword }),
-      });
+      const result = await AuthService.register(userData);
 
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess('Account created successfully! Redirecting to login...');
+      if (result.success) {
+        setSuccess(
+          'Account created successfully! Please check your email for verification, then login.'
+        );
         setTimeout(() => {
           router.push('/auth/login');
-        }, 2000);
+        }, 3000);
       } else {
-        setError(data.error || 'Registration failed');
+        setError(result.error || 'Registration failed');
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setIsGoogleLoading(true);
+    setError('');
+
+    try {
+      const result = await AuthService.signInWithGoogle();
+      if (!result.success) {
+        setError(result.error || 'Google sign-up failed');
+      }
+    } catch (err) {
+      setError('Google sign-up failed. Please try again.');
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -73,10 +87,12 @@ export default function RegisterPage() {
 
           <button
             type='button'
-            className='w-full flex items-center justify-center border border-black py-3 mb-6 text-black font-semibold hover:bg-gray-100 transition'
+            onClick={handleGoogleSignUp}
+            disabled={isGoogleLoading}
+            className='w-full flex items-center justify-center border border-black py-3 mb-6 text-black font-semibold hover:bg-gray-100 transition disabled:opacity-50'
           >
             <FcGoogle className='mr-3' />
-            Sign up with Google
+            {isGoogleLoading ? 'Signing up...' : 'Sign up with Google'}
           </button>
 
           <div className='flex items-center my-4'>
