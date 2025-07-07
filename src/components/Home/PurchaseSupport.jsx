@@ -18,8 +18,12 @@ const PurchaseSupport = () => {
 
   const CardComponent = ({ data, className = "" }) => (
     <div
-      className={` w-full max-w-full lg:w-[317.33px] h-[155px] xl:w-[500px] xl:h-[186px] bg-white/30 backdrop-blur-md border border-white/40 shadow-lg rounded-xl p-4 xl:p-6 flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] glass-card ${className}`}
-      style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)' }}
+      className={`w-full max-w-full lg:w-[317.33px] h-[155px] xl:w-[500px] xl:h-[186px] bg-white/10 backdrop-blur-xl border border-gray-300 shadow-lg rounded-xl p-4 xl:p-6 flex items-center gap-5 transition-all duration-300 hover:scale-[1.02] hover:bg-white/15 ${className}`}
+      style={{
+        // boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)'
+      }}
     >
       <img src="/assets/leaf-icon.svg" alt="Leaf Icon" className="w-11 h-11 " />
       <div>
@@ -36,7 +40,7 @@ const PurchaseSupport = () => {
       <img
         src="/assets/right-mandala.svg"
         alt="Left Decoration"
-        className="absolute left-1 top-[62.5%] transform -translate-y-1/2 w-[199px] h-[405px] z-0"
+        className="absolute left-1 top-[62.5%] transform -translate-y-1/2 w-[199px] h-[405px]  z-0"
       />
 
       <img

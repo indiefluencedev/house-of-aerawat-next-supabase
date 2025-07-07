@@ -1,4 +1,5 @@
 import Aboutbanner from '@/components/About/aboutbanner'
+import AboutCaraousel from '@/components/About/AboutCaraousel'
 import Defining from '@/components/About/Defining'
 import OurMissionVision from '@/components/About/OurMissionVision'
 import Tradition from '@/components/About/Tradition'
@@ -13,6 +14,7 @@ function page() {
         <Defining/>
         <OurMissionVision/>
         <PurchaseSupport/>
+        <AboutCaraousel/>
     </div>
   )
 }
