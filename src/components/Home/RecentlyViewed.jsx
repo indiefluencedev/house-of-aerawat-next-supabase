@@ -17,6 +17,7 @@ function RecentlyViewed() {
   // Calculate how many cards to show based on screen size
   const [cardsToShow, setCardsToShow] = useState(4);
   const [cardWidth, setCardWidth] = useState(20); // Width percentage for each card
+  const [imageHeight, setImageHeight] = useState('250px'); // Default height
 
   // Minimum swipe distance (in px) to trigger slide
   const minSwipeDistance = 50;
@@ -63,6 +64,32 @@ function RecentlyViewed() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Set image height based on screen size
+  useEffect(() => {
+    const updateImageHeight = () => {
+      const width = window.innerWidth;
+      if (width <= 375) {
+        setImageHeight('270px');
+      } else if (width <= 360) {
+        setImageHeight('270px');
+      } else if (width <= 320) {
+        setImageHeight('320px');
+      } else if (width >= 640 && width < 768) {
+        setImageHeight('320px');
+      } else if (width >= 768 && width < 1280) {
+        setImageHeight('270px');
+      } else if (width >= 1280) {
+        setImageHeight('390px');
+      } else {
+        setImageHeight('250px');
+      }
+    };
+
+    updateImageHeight();
+    window.addEventListener('resize', updateImageHeight);
+    return () => window.removeEventListener('resize', updateImageHeight);
   }, []);
 
   // Calculate total slides - can slide until we reach the end
@@ -162,12 +189,7 @@ function RecentlyViewed() {
                   <div
                     className="rounded-[6px] md:rounded-[8px] w-full relative overflow-hidden"
                     style={{
-                      height: window.innerWidth <= 375 ? '270px' :
-                             window.innerWidth <= 360 ? '270px' :
-                             window.innerWidth <= 320 ? '320px' :
-                             window.innerWidth >= 640 && window.innerWidth < 768 ? '320px' :
-                             window.innerWidth >= 768 && window.innerWidth < 1280 ? '270px' :
-                             window.innerWidth >= 1280 ? '390px' : '250px'
+                      height: imageHeight
                     }}
                   >
                     <img

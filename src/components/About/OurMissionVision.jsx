@@ -1,9 +1,9 @@
 function OurMissionVision() {
   return (
-    <div className="w-full bg-gray-50 py-[50px] md:py-[150px] px-4">
+    <div className="w-full bg-gray-50 py-[50px] md:py-[100px] px-4">
       {/* Mission Section */}
-      <div className="max-w-[1340px] mx-auto mb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-14 xl:gap-40 items-center">
+      <div className="max-w-[1340px] mx-auto mb-[50px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-14 xl:gap-30 items-center">
           {/* Mission Heading - Left Side */}
           <div className="text-right">
             <h2 className="text-4xl lg:text-[35px] font-bold text-[#222222] mb-4 tracking-wider">
@@ -23,8 +23,8 @@ function OurMissionVision() {
       </div>
 
       {/* Vision Section */}
-      <div className="max-w-[1340px] mx-auto pt-8 md:pt-10 lg:pt-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-14 xl:gap-40 items-center">
+      <div className="max-w-[1340px] mx-auto pt-8 md:pt-10 lg:pt-[50px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 lg:gap-14 xl:gap-30 items-center">
           {/* Vision Description - Left Side */}
           <div className="text-[#222222] leading-relaxed order-2 md:order-1">
             <p className="text-[16px] text-left md:text-right ">
