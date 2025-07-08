@@ -71,7 +71,7 @@ export default function LoginPage() {
       if (result.success) {
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push(result.redirect || '/dashboard');
+          router.push(result.redirect || '/');
         }, 1000);
       } else {
         setError(result.error || 'Login failed');

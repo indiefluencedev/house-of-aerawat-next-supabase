@@ -50,7 +50,31 @@ export async function POST(request) {
       );
     }
 
+    // Log registration data for debugging
+    console.log('[DEBUG] Registration attempt for:', { email, name, phone });
+
     const supabase = createSupabaseServerClient();
+
+    // Test database connection first
+    try {
+      const { data: testData, error: testError } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .limit(1);
+
+      if (testError) {
+        console.error('[DEBUG] Database connection test failed:', testError);
+        // If user_profiles table doesn't exist, we might need to create it
+        if (testError.code === 'PGRST116' || testError.message?.includes('relation "public.user_profiles" does not exist')) {
+          return NextResponse.json(
+            { success: false, error: 'Database not properly configured. Please contact support.' },
+            { status: 500 }
+          );
+        }
+      }
+    } catch (dbError) {
+      console.error('[DEBUG] Database test error:', dbError);
+    }
 
     // Create user with Supabase Auth (stores in auth.users table)
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -69,9 +93,30 @@ export async function POST(request) {
     });
 
     if (authError) {
-      console.error('Auth error:', authError);
+      console.error('[DEBUG] Auth error details:', {
+        message: authError.message,
+        status: authError.status,
+        code: authError.code,
+        details: authError
+      });
+
+      // Handle specific error cases
+      if (authError.message?.includes('User already registered')) {
+        return NextResponse.json(
+          { success: false, error: 'An account with this email already exists' },
+          { status: 400 }
+        );
+      }
+
+      if (authError.message?.includes('Database error')) {
+        return NextResponse.json(
+          { success: false, error: 'Database configuration error. Please contact support.' },
+          { status: 500 }
+        );
+      }
+
       return NextResponse.json(
-        { success: false, error: authError.message },
+        { success: false, error: authError.message || 'Registration failed' },
         { status: 400 }
       );
     }
@@ -83,6 +128,8 @@ export async function POST(request) {
       );
     }
 
+    console.log('[DEBUG] User created successfully:', authData.user.id);
+
     // Note: Don't create user profile yet - wait for email verification
     // The profile will be created in the callback route after verification
 
@@ -93,7 +140,7 @@ export async function POST(request) {
       needsVerification: true,
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('[DEBUG] Registration error:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }
