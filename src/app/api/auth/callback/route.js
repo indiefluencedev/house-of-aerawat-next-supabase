@@ -50,6 +50,55 @@ export async function GET(request) {
 
     // For email verification, redirect to login page
     if (isEmailVerification) {
+      // Create user profile if it doesn't exist
+      try {
+        console.log('[DEBUG] Checking for existing user profile', sessionData.user.id);
+        const { data: existingProfile, error: profileFetchError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', sessionData.user.id)
+          .single();
+        console.log('[DEBUG] Profile fetch result', { existingProfile, profileFetchError });
+
+        if (profileFetchError && profileFetchError.code !== 'PGRST116') {
+          console.error('[DEBUG] Error fetching user profile:', profileFetchError);
+          return NextResponse.redirect(
+            new URL('/auth/login?error=profile_fetch_error', request.url)
+          );
+        }
+
+        if (profileFetchError && profileFetchError.code === 'PGRST116') {
+          // Profile does not exist, create it
+          const profilePayload = {
+            id: sessionData.user.id,
+            email: sessionData.user.email,
+            name: sessionData.user.user_metadata?.name || 'User',
+            phone: sessionData.user.user_metadata?.phone || '',
+            role: sessionData.user.user_metadata?.role || 'user',
+            provider: sessionData.user.app_metadata?.provider || 'email',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          console.log('[DEBUG] Inserting new user profile', profilePayload);
+          const { error: profileInsertError, data: profileInsertData } = await supabase
+            .from('user_profiles')
+            .insert([profilePayload])
+            .select()
+            .single();
+          console.log('[DEBUG] Profile insert result', { profileInsertError, profileInsertData });
+          if (profileInsertError) {
+            console.error('[DEBUG] Error creating user profile:', profileInsertError);
+            return NextResponse.redirect(
+              new URL('/auth/login?error=profile_create_error', request.url)
+            );
+          }
+        }
+      } catch (profileError) {
+        console.error('[DEBUG] Profile creation error:', profileError);
+        return NextResponse.redirect(
+          new URL('/auth/login?error=profile_create_error', request.url)
+        );
+      }
       return NextResponse.redirect(
         new URL('/auth/login?verified=true', request.url)
       );
@@ -65,6 +114,56 @@ export async function GET(request) {
         sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
+
+      // Create user profile if it doesn't exist
+      try {
+        console.log('[DEBUG] Checking for existing user profile', sessionData.user.id);
+        const { data: existingProfile, error: profileFetchError } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', sessionData.user.id)
+          .single();
+        console.log('[DEBUG] Profile fetch result', { existingProfile, profileFetchError });
+
+        if (profileFetchError && profileFetchError.code !== 'PGRST116') {
+          console.error('[DEBUG] Error fetching user profile:', profileFetchError);
+          return NextResponse.redirect(
+            new URL('/auth/login?error=profile_fetch_error', request.url)
+          );
+        }
+
+        if (profileFetchError && profileFetchError.code === 'PGRST116') {
+          // Profile does not exist, create it
+          const profilePayload = {
+            id: sessionData.user.id,
+            email: sessionData.user.email,
+            name: sessionData.user.user_metadata?.name || 'User',
+            phone: sessionData.user.user_metadata?.phone || '',
+            role: sessionData.user.user_metadata?.role || 'user',
+            provider: sessionData.user.app_metadata?.provider || 'google',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          };
+          console.log('[DEBUG] Inserting new user profile', profilePayload);
+          const { error: profileInsertError, data: profileInsertData } = await supabase
+            .from('user_profiles')
+            .insert([profilePayload])
+            .select()
+            .single();
+          console.log('[DEBUG] Profile insert result', { profileInsertError, profileInsertData });
+          if (profileInsertError) {
+            console.error('[DEBUG] Error creating user profile:', profileInsertError);
+            return NextResponse.redirect(
+              new URL('/auth/login?error=profile_create_error', request.url)
+            );
+          }
+        }
+      } catch (profileError) {
+        console.error('[DEBUG] Profile creation error:', profileError);
+        return NextResponse.redirect(
+          new URL('/auth/login?error=profile_create_error', request.url)
+        );
+      }
 
       // Check if user is admin based on email or user metadata
       const userEmail = sessionData.user.email;

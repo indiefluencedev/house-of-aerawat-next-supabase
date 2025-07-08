@@ -81,7 +81,7 @@ export async function POST(request) {
     });
 
     // Determine redirect based on role
-    const redirectPath = role === 'admin' ? '/admin' : '/dashboard';
+    const redirectPath = '/'; // Always redirect to home page
 
     return NextResponse.json({
       success: true,

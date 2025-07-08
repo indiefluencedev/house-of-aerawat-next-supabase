@@ -161,50 +161,7 @@ export class AuthService {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          redirectTo: '/dashboard',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.success && data.url) {
-        window.location.href = data.url;
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Google sign-in error:', error);
-      return { success: false, error: 'Network error' };
-    }
-  }
-
-  // Logout user
-  static async logout() {
-    try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Logout error:', error);
-      return { success: false, error: 'Network error' };
-    }
-  }
-  // Sign in with Google
-  static async signInWithGoogle() {
-    try {
-      const response = await fetch('/api/auth/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}), // No redirect needed
+        // No body needed
       });
 
       const data = await response.json();

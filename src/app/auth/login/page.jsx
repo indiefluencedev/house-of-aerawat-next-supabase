@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { AuthService } from '@/lib/services/authService';
+import { supabase } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,15 +67,17 @@ export default function LoginPage() {
     const password = formData.get('password');
 
     try {
-      const result = await AuthService.login(email, password);
-
-      if (result.success) {
+      // Use Supabase client directly for email/password login
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError(error.message || 'Login failed');
+      } else if (data?.user) {
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          router.push(result.redirect || '/dashboard');
+          window.location.href = '/'; // Full reload to ensure session is picked up
         }, 1000);
       } else {
-        setError(result.error || 'Login failed');
+        setError('Login failed');
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
