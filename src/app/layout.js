@@ -2,8 +2,9 @@
 import './globals.css'
 import Navbar from '@/components/navigation/navbar' // Your custom header component
 import Footer from '@/components/navigation/Footer' // Your custom footer component
-import FloatingActionBar from '@/components/reusablecomponent/FloatingActionBar'
+import FloatingActionBar from '@/components/constants/FloatingActionBar'
 import MobileHeader from '@/components/navigation/MobileHeader'
+
 
 export const metadata = {
   title: 'House of Aerawat',

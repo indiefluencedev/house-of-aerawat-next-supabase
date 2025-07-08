@@ -23,7 +23,9 @@ export default function MobileHeader() {
               <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <Image src="/assets/newlogo.png" alt="Logo" width={180} height={50} className="ml-1" />
+          <Link href="/">
+            <Image src="/assets/newlogo.png" alt="Logo" width={180} height={50} className="ml-1 cursor-pointer" />
+          </Link>
         </div>
         {/* Icons */}
         <div className="flex items-center space-x-4">
@@ -76,7 +78,9 @@ export default function MobileHeader() {
                 <path strokeLinecap="round" d="M6 6l12 12M6 18L18 6" />
               </svg>
             </button>
-            <Image src="/assets/newlogo.png" alt="Logo" width={180} height={50} className="ml-1" />
+            <Link href="/">
+              <Image src="/assets/newlogo.png" alt="Logo" width={180} height={50} className="ml-1 cursor-pointer" />
+            </Link>
           </div>
           {/* Categories */}
           <nav className="flex flex-col py-2">

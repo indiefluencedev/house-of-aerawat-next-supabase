@@ -1,14 +1,44 @@
 // src/components/Content2.jsx
-// import '../../css/content.css'
+import Link from 'next/link';
 
-const cards = [
-  { image: '/assets/img4.jpg',title: 'Fine Jewellery' },
-  { image: '/assets/img.jpg',title: 'Shringaar' },
-  { image: '/assets/img2.jpg',title: 'Kalapatt' },
-  { image: '/assets/img.jpg', title: 'Crystals' },
-  { image: '/assets/img2.jpg', title: 'Crystals' },
-  { image: '/assets/img4.jpg', title: 'Treasured Gifts' }
-]
+const categories = [
+  {
+    id: 1,
+    image: '/assets/img4.jpg',
+    title: 'Fine Jewellery',
+    slug: 'fine-jewellery'
+  },
+  {
+    id: 2,
+    image: '/assets/img.jpg',
+    title: 'Shringaar',
+    slug: 'shringaar'
+  },
+  {
+    id: 3,
+    image: '/assets/img2.jpg',
+    title: 'Kalapatt',
+    slug: 'kalapatt'
+  },
+  {
+    id: 4,
+    image: '/assets/img.jpg',
+    title: 'Crystals',
+    slug: 'crystals'
+  },
+  {
+    id: 5,
+    image: '/assets/img2.jpg',
+    title: 'Wooden Beads',
+    slug: 'wooden-beads'
+  },
+  {
+    id: 6,
+    image: '/assets/img4.jpg',
+    title: 'Treasured Gifts',
+    slug: 'treasured-gifts'
+  }
+];
 
 const Gallery = () => {
   return (
@@ -19,56 +49,59 @@ const Gallery = () => {
         <div className="hidden lg:block">
           {/* Top Row */}
           <div className="flex gap-[10px] mb-[10px]">
-            {cards.slice(0, 3).map((card, index) => (
-              <div
-                key={index}
-                className={`${index === 0 ?  'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
+            {categories.slice(0, 3).map((category, index) => (
+              <Link
+                href={`/category/${category.slug}`}
+                key={category.id}
+                className={`${index === 0 ? 'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
               >
-                <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                <img src={category.image} alt={category.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 {/* Gradient overlay that fades from transparent to white */}
                 <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
                 {/* Text container */}
                 <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
-                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
+                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{category.title}</h3>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
           {/* Bottom Row */}
           <div className="flex gap-[10px]">
-            {cards.slice(3).map((card, index) => (
-              <div
-                key={index + 3}
+            {categories.slice(3).map((category, index) => (
+              <Link
+                href={`/category/${category.slug}`}
+                key={category.id}
                 className={`${index === 2 ? 'w-[466px] xl:w-[658px]' : 'w-[233px] xl:w-[431px]'} h-[213px] xl:h-[300px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]`}
               >
-                <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                <img src={category.image} alt={category.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                 {/* Gradient overlay that fades from transparent to white */}
                 <div className="absolute bottom-0 w-full h-[265px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
                 {/* Text container */}
                 <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
-                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
+                  <h3 className="text-[#14397C] text-[22px] font-semibold transition-colors duration-300 group-hover:text-[#0f2a5a]">{category.title}</h3>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
 
         {/* Mobile/Tablet Layout - Stacked cards */}
         <div className="lg:hidden flex flex-col gap-[8px] w-full">
-          {cards.map((card, index) => (
-            <div
-              key={index}
+          {categories.map((category) => (
+            <Link
+              href={`/category/${category.slug}`}
+              key={category.id}
               className="w-full h-[280px] sm:h-[320px] md:h-[350px] rounded-[8px] border border-gray-300 overflow-hidden relative card group cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             >
-              <img src={card.image} alt={card.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+              <img src={category.image} alt={category.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
               {/* Gradient overlay that fades from transparent to white */}
               <div className="absolute bottom-0 w-full h-[180px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent transition-opacity duration-300 group-hover:opacity-80"></div>
               {/* Text container */}
               <div className="absolute bottom-0 w-full text-center py-3 transition-transform duration-300 group-hover:translate-y-[-5px]">
-                <h3 className="text-[#14397C] text-[20px] font-semibold text-sm sm:text-base transition-colors duration-300 group-hover:text-[#0f2a5a]">{card.title}</h3>
+                <h3 className="text-[#14397C] text-[20px] font-semibold text-sm sm:text-base transition-colors duration-300 group-hover:text-[#0f2a5a]">{category.title}</h3>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
