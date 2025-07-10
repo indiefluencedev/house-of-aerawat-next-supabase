@@ -1,18 +1,35 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import products from '../../Data/products';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 
-function ProductDetailPage() {
-  const { id } = useParams();
+function ProductDetailPage({ product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [openDropdowns, setOpenDropdowns] = useState({});
   const [dropdownHeights, setDropdownHeights] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
+
+  // Handle add to cart functionality
+  const handleAddToCart = () => {
+    // TODO: Implement cart functionality
+    console.log('Add to cart:', { productId: product.id, quantity });
+  };
+
+  // Handle add to wishlist functionality
+  const handleAddToWishlist = () => {
+    // TODO: Implement wishlist functionality
+    console.log('Add to wishlist:', product.id);
+  };
+
+  // Get product images
+  const productImages = product.images && product.images.length > 0 
+    ? product.images 
+    : ['/assets/products/cardimage.png'];
 
   const shippingRef = useRef(null);
   const returnRef = useRef(null);
-
-  const product = products.products.find(p => p.id === Number(id));
 
   // Calculate dropdown heights when they open
   useEffect(() => {
@@ -31,7 +48,22 @@ function ProductDetailPage() {
   }, [openDropdowns]);
 
   if (!product) {
-    return <div className="max-w-[1240px] mx-auto px-4 py-8">Product not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Product Not Found
+          </h2>
+          <p className="text-gray-600 mb-4">The requested product could not be found.</p>
+          <Link 
+            href="/products" 
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          >
+            Back to Products
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   const toggleDropdown = (dropdown) => {
@@ -42,8 +74,24 @@ function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-[1240px] mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
+          <Link href="/" className="hover:text-blue-600">
+            Home
+          </Link>
+          <span>/</span>
+          <Link href="/products" className="hover:text-blue-600">
+            Products
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900">{product.name}</span>
+        </nav>
+
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Product Images */}
         <div>
           {/* Main Image Carousel */}
@@ -52,12 +100,14 @@ function ProductDetailPage() {
               className="flex transition-transform duration-500 ease-in-out h-full"
               style={{ transform: `translateX(-${activeImage * 100}%)` }}
             >
-              {product.thumbnails.map((image, index) => (
+              {productImages.map((image, index) => (
                 <div key={index} className="w-full h-full flex-shrink-0 flex items-center justify-center">
-                  <img
+                  <Image
                     src={image}
                     alt={`${product.name} ${index + 1}`}
-                    className="h-[300px] md:h-[467.2px] w-full"
+                    width={467}
+                    height={467}
+                    className="h-[300px] md:h-[467.2px] w-full object-cover"
                   />
                 </div>
               ))}
@@ -65,7 +115,7 @@ function ProductDetailPage() {
 
             {/* Navigation Arrows */}
             <button
-              onClick={() => setActiveImage(activeImage > 0 ? activeImage - 1 : product.thumbnails.length - 1)}
+              onClick={() => setActiveImage(activeImage > 0 ? activeImage - 1 : productImages.length - 1)}
               className="absolute left-1 top-1/2 transform -translate-y-1/2 bg-transparent cursor-pointer bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-md transition-all duration-200"
             >
               <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +124,7 @@ function ProductDetailPage() {
             </button>
 
             <button
-              onClick={() => setActiveImage(activeImage < product.thumbnails.length - 1 ? activeImage + 1 : 0)}
+              onClick={() => setActiveImage(activeImage < productImages.length - 1 ? activeImage + 1 : 0)}
               className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-transparent cursor-pointer bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-md transition-all duration-200"
             >
               <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,17 +135,19 @@ function ProductDetailPage() {
 
           {/* Thumbnail Navigation */}
           <div className="grid grid-cols-4 gap-2">
-            {product.thumbnails.map((thumb, index) => (
+            {productImages.map((thumb, index) => (
               <div
                 key={index}
-                className={`w-[80px] h-[80px] md:h-[128px] md:w-[128px] flex items-center justify-center cursor-pointer  transition-all duration-200 ${
+                className={`w-[80px] h-[80px] md:h-[128px] md:w-[128px] flex items-center justify-center cursor-pointer transition-all duration-200 ${
                   activeImage === index ? 'border-[#14397C] ring-2 ring-[#14397C]' : 'border-gray-200 hover:border-gray-300'
                 }`}
                 onClick={() => setActiveImage(index)}
               >
-                <img
+                <Image
                   src={thumb}
                   alt={`Thumbnail ${index + 1}`}
+                  width={128}
+                  height={128}
                   className="w-[80px] h-[80px] md:w-[128px] md:h-[128px] object-cover"
                 />
               </div>
@@ -106,12 +158,18 @@ function ProductDetailPage() {
         {/* Product Info */}
         <div>
           <h1 className="text-[28px] md:text-[32px] font-bold mb-2">{product.name}</h1>
-          <p className="text-[22px] md:text-[28px] font-semibold text-gray-800 mb-4">₹{product.price.toFixed(2)}</p>
+          <p className="text-[22px] md:text-[28px] font-semibold text-gray-800 mb-4">
+            {product.price > 0 ? `₹${product.price.toFixed(2)}` : 'Price on Demand'}
+          </p>
 
           <div className="mb-6 flex items-center">
             <label className="text-[16px] font-semibold text-black">Quantity:</label>
             <div className="relative ml-3">
-              <select className="border-1 border-gray-500 cursor-pointer font-medium rounded px-3 py-2 pr-8 w-20 appearance-none bg-white">
+              <select 
+                className="border-1 border-gray-500 cursor-pointer font-medium rounded px-3 py-2 pr-8 w-20 appearance-none bg-white"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+              >
                 {[1, 2, 3, 4, 5].map(num => (
                   <option key={num} value={num}>{num}</option>
                 ))}
@@ -125,26 +183,32 @@ function ProductDetailPage() {
           </div>
 
           <div className="mb-6">
-            <p className="text-gray-700">{product.description}</p>
+            <p className="text-gray-700">{product.description || 'No description available.'}</p>
           </div>
 
           {/* Full Width Stacked Buttons */}
           <div className="space-y-3 mb-8">
-            <button className="w-full cursor-pointer border border-gray-300 px-6 py-3 rounded hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2">
+            <button 
+              onClick={handleAddToWishlist}
+              className="w-full cursor-pointer border border-gray-300 px-6 py-3 rounded hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center gap-2"
+            >
               <span>Wishlist</span>
               <img
-            src="/assets/heart.svg"
-            alt="heart"
-            className="w-5 h-5"
-          />
+                src="/assets/heart.svg"
+                alt="heart"
+                className="w-5 h-5"
+              />
             </button>
-            <button className="w-full bg-[#14397C] text-white px-6 py-3 rounded cursor-pointer hover:bg-[#38445a] transition-colors duration-200 flex items-center justify-center gap-2">
-              <span>Add to Cart</span>
+            <button 
+              onClick={handleAddToCart}
+              className="w-full bg-[#14397C] text-white px-6 py-3 rounded cursor-pointer hover:bg-[#38445a] transition-colors duration-200 flex items-center justify-center gap-2"
+            >
+              <span>{product.price > 0 ? 'Add to Cart' : 'Inquire Now'}</span>
               <img
-            src="/assets/products/Frame.svg"
-            alt="cart"
-            className="w-5 h-5"
-          />
+                src="/assets/products/Frame.svg"
+                alt="cart"
+                className="w-5 h-5"
+              />
             </button>
           </div>
 
@@ -175,7 +239,11 @@ function ProductDetailPage() {
                   ref={shippingRef}
                   className="mt-2 pl-5 list-disc space-y-1 pb-2"
                 >
-                  {product.shippingPolicy.map((item, index) => (
+                  {(product.shippingPolicy || [
+                    'Free shipping on orders over ₹500',
+                    'Delivery within 3-5 business days',
+                    'International shipping available'
+                  ]).map((item, index) => (
                     <li key={index} className="text-sm text-gray-600">{item}</li>
                   ))}
                 </ul>
@@ -207,11 +275,18 @@ function ProductDetailPage() {
                   ref={returnRef}
                   className="mt-2 pl-5 list-disc space-y-1 pb-2"
                 >
-                  {product.returnPolicy.map((item, index) => (
+                  {(product.returnPolicy || [
+                    '30-day return policy',
+                    'Items must be unused with tags',
+                    'Customer pays return shipping'
+                  ]).map((item, index) => (
                     <li key={index} className="text-sm text-gray-600">{item}</li>
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
             </div>
           </div>
         </div>

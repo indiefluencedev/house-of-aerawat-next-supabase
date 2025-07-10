@@ -9,28 +9,26 @@ export default function UserSidebar({ user }) {
   const navItems = [
     {
       name: 'Account Information',
-      path: '/dashboard',
+      path: '/my-account',
     },
     {
       name: 'My Orders',
-      path: '/dashboard/orders',
+      path: '/my-account/orders',
     },
     {
       name: 'My Addresses',
-      path: '/dashboard/addresses',
+      path: '/my-account/addresses',
     },
     {
       name: 'Settings',
-      path: '/dashboard/settings',
+      path: '/my-account/settings',
     },
   ];
 
   return (
     <div className='w-full lg:w-1/5 px-5 lg:block border-r'>
       <div className='p-6 h-full ml-3'>
-        <h3 className='text-2xl font-bold mb-4'>
-          Hi, {/*user?.name || 'User'*/}!
-        </h3>
+        <h3 className='text-2xl font-bold mb-4'>Hi, {user?.name || 'User'}!</h3>
         <h3 className='text-lg pt-2 font-semibold mb-4'>My Account</h3>
 
         <nav className='space-y-2'>

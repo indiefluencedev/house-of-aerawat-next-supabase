@@ -88,23 +88,18 @@ const Navbar = () => {
 
   const getUserDashboardLink = () => {
     if (!user) return '/auth/login';
-    return user.role === 'admin' ? '/admin' : '/dashboard';
+    return user.role === 'admin' ? '/admin' : '/my-account';
   };
 
   const renderUserIcon = () => {
-    if (isLoading) {
-      return (
-        <div className='w-6 h-6 bg-gray-300 rounded-full animate-pulse'></div>
-      );
-    }
-
     if (user) {
       return (
-        <div className='relative'>
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className='flex items-center space-x-2 focus:outline-none'
-          >
+        <div
+          className='relative'
+          onMouseEnter={() => setShowUserMenu(true)}
+          onMouseLeave={() => setShowUserMenu(false)}
+        >
+          <div className='flex items-center space-x-2 focus:outline-none cursor-pointer'>
             <Image
               src='/assets/svgs/user.svg'
               alt='User Profile'
@@ -112,13 +107,10 @@ const Navbar = () => {
               height={24}
               className='w-6 h-6'
             />
-            <span className='hidden md:inline text-sm'>
-              {user.profile?.name || user.user_metadata?.name || 'User'}
-            </span>
-          </button>
+          </div>
 
           {showUserMenu && (
-            <div className='absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50'>
+            <div className='absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50'>
               <div className='py-2'>
                 <div className='px-4 py-2 text-sm text-gray-700 border-b'>
                   <div className='font-medium'>
@@ -129,17 +121,25 @@ const Navbar = () => {
                 <Link
                   href={getUserDashboardLink()}
                   className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                  onClick={() => setShowUserMenu(false)}
                 >
-                  {user.role === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
+                  {user.role === 'admin' ? 'Admin Dashboard' : 'My Account'}
                 </Link>
-                <Link
-                  href='/profile'
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  Profile Settings
-                </Link>
+                {user.role !== 'admin' && (
+                  <>
+                    <Link
+                      href='/my-account/orders'
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    >
+                      My Orders
+                    </Link>
+                    <Link
+                      href='/my-account/addresses'
+                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                    >
+                      My Addresses
+                    </Link>
+                  </>
+                )}
                 <button
                   onClick={handleLogout}
                   className='block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100'

@@ -1,22 +1,22 @@
-import Aboutbanner from '@/components/About/aboutbanner'
-import AboutCaraousel from '@/components/About/AboutCaraousel'
-import Defining from '@/components/About/Defining'
-import OurMissionVision from '@/components/About/OurMissionVision'
-import Tradition from '@/components/About/Tradition'
-import PurchaseSupport from '@/components/Home/PurchaseSupport'
-import React from 'react'
+import Aboutbanner from '@/components/about/Aboutbanner';
+import AboutCaraousel from '@/components/about/AboutCaraousel';
+import Defining from '@/components/about/Defining';
+import OurMissionVision from '@/components/about/OurMissionVision';
+import Tradition from '@/components/about/Tradition';
+import PurchaseSupport from '@/components/home/PurchaseSupport';
+import React from 'react';
 
 function page() {
   return (
     <div>
-        <Aboutbanner/>
-        <Tradition/>
-        <Defining/>
-        <OurMissionVision/>
-        <PurchaseSupport/>
-        <AboutCaraousel/>
+      <Aboutbanner />
+      <Tradition />
+      <Defining />
+      <OurMissionVision />
+      <PurchaseSupport />
+      <AboutCaraousel />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;
