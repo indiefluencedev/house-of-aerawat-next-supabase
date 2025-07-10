@@ -1,231 +1,228 @@
-// lib/services/productService.js - Product business logic
-import { supabase } from '@/lib/supabase/client';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { supabase } from '../supabase/client';
 
-/**
- * Client-side product functions
- */
-export const productService = {
-  // Get all products
-  getAllProducts: async () => {
+export class ProductService {
+  // Get all products with optional filtering
+  static async getProducts(filters = {}) {
     try {
-      const { data: products, error } = await supabase
+      let query = supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw new Error(error.message);
+      // Apply category filter
+      if (filters.category && filters.category !== 'All products') {
+        query = query.eq('category', filters.category);
       }
 
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
+      // Apply search filter
+      if (filters.search) {
+        query = query.ilike('name', `%${filters.search}%`);
+      }
 
-  // Get product by ID
-  getProductById: async (id) => {
+      // Apply pagination
+      if (filters.page && filters.limit) {
+        const from = (filters.page - 1) * filters.limit;
+        const to = from + filters.limit - 1;
+        query = query.range(from, to);
+      }
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        throw error;
+      }
+
+      return {
+        success: true,
+        data,
+        count,
+        message: 'Products fetched successfully',
+      };
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to fetch products',
+      };
+    }
+  }
+
+  // Get single product by ID
+  static async getProductById(id) {
     try {
-      const { data: product, error } = await supabase
+      const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('id', id)
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        throw error;
       }
 
-      return { success: true, product };
+      return {
+        success: true,
+        data,
+        message: 'Product fetched successfully',
+      };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('Error fetching product:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to fetch product',
+      };
     }
-  },
+  }
 
-  // Get products by category
-  getProductsByCategory: async (category) => {
+  // Create new product
+  static async createProduct(productData) {
     try {
-      const { data: products, error } = await supabase
+      const { data, error } = await supabase
         .from('products')
-        .select('*')
-        .eq('category', category)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Search products
-  searchProducts: async (query) => {
-    try {
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-};
-
-/**
- * Server-side product functions (for admin operations)
- */
-export const serverProductService = {
-  // Get products by category (server-side)
-  getProductsByCategory: async (category) => {
-    const supabase = createSupabaseServerClient();
-
-    try {
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category', category)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Search products (server-side)
-  searchProducts: async (query) => {
-    const supabase = createSupabaseServerClient();
-
-    try {
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Get all products (server-side)
-  getAllProducts: async () => {
-    const supabase = createSupabaseServerClient();
-
-    try {
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, products };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Get product by ID (server-side)
-  getProductById: async (id) => {
-    const supabase = createSupabaseServerClient();
-
-    try {
-      const { data: product, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return { success: true, product };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  },
-
-  // Create new product (admin only)
-  createProduct: async (productData) => {
-    const supabase = createSupabaseServerClient();
-
-    try {
-      const { data: product, error } = await supabase
-        .from('products')
-        .insert(productData)
+        .insert([
+          {
+            name: productData.productName,
+            description: productData.description,
+            price: productData.price,
+            category: productData.category,
+            images: productData.images || [],
+          },
+        ])
         .select()
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        throw error;
       }
 
-      return { success: true, product };
+      return {
+        success: true,
+        data,
+        message: 'Product created successfully',
+      };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('Error creating product:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to create product',
+      };
     }
-  },
+  }
 
-  // Update product (admin only)
-  updateProduct: async (id, productData) => {
-    const supabase = createSupabaseServerClient();
-
+  // Update product
+  static async updateProduct(id, productData) {
     try {
-      const { data: product, error } = await supabase
+      const { data, error } = await supabase
         .from('products')
-        .update(productData)
+        .update({
+          name: productData.productName,
+          description: productData.description,
+          price: productData.price,
+          category: productData.category,
+          images: productData.images || [],
+        })
         .eq('id', id)
         .select()
         .single();
 
       if (error) {
-        throw new Error(error.message);
+        throw error;
       }
 
-      return { success: true, product };
+      return {
+        success: true,
+        data,
+        message: 'Product updated successfully',
+      };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('Error updating product:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to update product',
+      };
     }
-  },
+  }
 
-  // Delete product (admin only)
-  deleteProduct: async (id) => {
-    const supabase = createSupabaseServerClient();
-
+  // Delete product
+  static async deleteProduct(id) {
     try {
       const { error } = await supabase.from('products').delete().eq('id', id);
 
       if (error) {
-        throw new Error(error.message);
+        throw error;
       }
 
-      return { success: true };
+      return {
+        success: true,
+        message: 'Product deleted successfully',
+      };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('Error deleting product:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to delete product',
+      };
     }
-  },
-};
+  }
+
+  // Get products by category
+  static async getProductsByCategory(category) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', category)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      return {
+        success: true,
+        data,
+        message: 'Products fetched successfully',
+      };
+    } catch (error) {
+      console.error('Error fetching products by category:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to fetch products',
+      };
+    }
+  }
+
+  // Get featured products (could be based on some criteria)
+  static async getFeaturedProducts(limit = 6) {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        throw error;
+      }
+
+      return {
+        success: true,
+        data,
+        message: 'Featured products fetched successfully',
+      };
+    } catch (error) {
+      console.error('Error fetching featured products:', error);
+      return {
+        success: false,
+        error: error.message,
+        message: 'Failed to fetch featured products',
+      };
+    }
+  }
+}
