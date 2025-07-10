@@ -230,7 +230,7 @@ function RecentlyViewed() {
           <button
             onClick={prevSlide}
             disabled={isTransitioning || currentSlide <= 0}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer"
           >
             <svg
               className="w-5 h-5 text-gray-600 transform rotate-180"
@@ -245,7 +245,7 @@ function RecentlyViewed() {
           <button
             onClick={nextSlide}
             disabled={isTransitioning || currentSlide >= totalSlides}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 cursor-pointer"
           >
             <svg
               className="w-5 h-5 text-gray-600"

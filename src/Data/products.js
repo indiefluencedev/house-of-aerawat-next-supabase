@@ -141,7 +141,6 @@ const products = {
       id: 7,
       name: "product7",
       price: 49.99,
-      category: "shringaar",
       image: "/assets/products/cardimage.png",
       thumbnails: [
         "/images/product1-thumb1.jpg",
@@ -191,7 +190,6 @@ const products = {
       id: 9,
       name: "product9",
       price: 49.99,
-      category: "crystals",
       image: "/assets/products/cardimage.png",
       thumbnails: [
         "/images/product1-thumb1.jpg",
@@ -416,7 +414,6 @@ const products = {
       id: 18,
       name: "product18",
       price: 49.99,
-      category: "kalapatt",
       image: "/assets/products/cardimage.png",
       thumbnails: [
         "/images/product1-thumb1.jpg",
@@ -541,7 +538,6 @@ const products = {
       id: 23,
       name: "product23",
       price: 49.99,
-      category: "kalapatt",
       image: "/assets/products/cardimage.png",
       thumbnails: [
         "/images/product1-thumb1.jpg",
@@ -566,7 +562,6 @@ const products = {
       id: 24,
       name: "product24",
       price: 49.99,
-      category: "crystals",
       image: "/assets/products/cardimage.png",
       thumbnails: [
         "/images/product1-thumb1.jpg",
