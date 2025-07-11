@@ -46,6 +46,16 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+:root {
+  --vh: 1vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --vh: 1dvh;
+  }
+}
+
 /* Kumbh Sans for p, h3, h4, h5, h6, div, span, a */
 p, h3, h4, h5, h6, div, span, a {
   font-family: 'Kumbh Sans', sans-serif;

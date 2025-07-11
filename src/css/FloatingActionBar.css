@@ -40,7 +40,6 @@
     transform: scale(1.05);
   }
 
-
   /* On small screens, use a fixed top offset for stability */
   @media (max-width: 480px) {
     .fab-fixed-center {

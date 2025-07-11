@@ -4,12 +4,35 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { AuthService } from '@/lib/services/authService';
 
-const Header = () => {
+const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Categories data - matches the structure from your category page
+  const categories = [
+    { name: "Fine Jewellery", slug: "fine-jewellery" },
+    { name: "Shringaar", slug: "shringaar" },
+    { name: "Kalapatt", slug: "kalapatt" },
+    { name: "Crystals", slug: "crystals" },
+    { name: "Wooden Beads", slug: "wooden-beads" },
+    { name: "Treasured Gifts", slug: "treasured-gifts" }
+  ];
+
+  // Handle category click
+  const handleCategoryClick = (categorySlug) => {
+    router.push(`/category/${categorySlug}`);
+  };
+
+  // Check if category is active based on current pathname
+  const isCategoryActive = (categorySlug) => {
+    return pathname === `/category/${categorySlug}`;
+  };
 
   useEffect(() => {
     checkAuth();
@@ -217,28 +240,64 @@ const Header = () => {
       </div>
 
       {/* Category Navigation */}
-      <div className='flex flex-wrap justify-center space-x-4 py-6 text-xs md:text-sm new-class2 gap-26 text-black'>
-        <a href='#' className='hover:underline'>
-          Fine Jewellery
-        </a>
-        <a href='#' className='hover:underline'>
-          Shringaar
-        </a>
-        <a href='#' className='hover:underline'>
-          Kalapatt
-        </a>
-        <a href='#' className='hover:underline'>
-          Crystals
-        </a>
-        <a href='#' className='hover:underline'>
-          Wooden Beads
-        </a>
-        <a href='#' className='hover:underline'>
-          Treasured Gifts
-        </a>
+      <div className='flex flex-wrap justify-center space-x-4 py-6 text-xs md:text-[14px] new-class2 gap-26 text-black font-medium tracking-wide'>
+        {categories.map((category) => (
+          <button
+            key={category.slug}
+            onClick={() => handleCategoryClick(category.slug)}
+            className={`
+              relative cursor-pointer focus:outline-none transition-all duration-300 ease-in-out
+              ${isCategoryActive(category.slug)
+                ? 'text-black'
+                : 'text-black hover:text-gray-700'
+              }
+            `}
+          >
+            {category.name}
+            {/* Animated underline */}
+            <span
+              className={`
+                absolute bottom-0 left-0 h-[2px] bg-black transition-all duration-300 ease-in-out
+                ${isCategoryActive(category.slug)
+                  ? 'w-full'
+                  : 'w-0 group-hover:w-full'
+                }
+              `}
+            />
+            {/* Hover effect - separate span for hover animation */}
+            <span className="absolute bottom-0 left-0 h-[2px] bg-black w-0 hover:w-full transition-all duration-300 ease-in-out opacity-0 hover:opacity-100" />
+          </button>
+        ))}
       </div>
+
+      {/* Custom CSS for better hover effect */}
+      <style jsx>{`
+        .new-class2 button {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .new-class2 button::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background-color: #000;
+          transition: width 0.3s ease-in-out;
+        }
+
+        .new-class2 button:hover::after {
+          width: 100%;
+        }
+
+        .new-class2 button.active::after {
+          width: 100%;
+        }
+      `}</style>
     </header>
   );
 };
 
-export default Header;
+export default Navbar;
