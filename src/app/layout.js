@@ -3,7 +3,7 @@ import './globals.css';
 import Navbar from '@/components/navigation/navbar'; // Your custom header component
 import Footer from '@/components/navigation/Footer'; // Your custom footer component
 import FloatingActionBar from '@/components/constants/FloatingActionBar';
-import MobileHeader from '@/components/navigation/MobileNavbar';
+import MobileNavbar from '@/components/navigation/MobileNavbar';
 
 export const metadata = {
   title: 'House of Aerawat',
@@ -33,7 +33,7 @@ export default function RootLayout({ children }) {
         </div>
         {/* ✅ Mobile Header (mobile/tablet only) */}
         <div className='block xl:hidden'>
-          <MobileHeader />
+          <MobileNavbar />
         </div>
 
         {/* ✅ Main content */}

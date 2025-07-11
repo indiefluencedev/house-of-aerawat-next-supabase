@@ -4,5 +4,10 @@ const nextConfig = {
       domains: ['oypwkxbxtjtffubsadgw.supabase.co'],
     },
   };
+const nextConfig = {
+  images: {
+    domains: ['oypwkxbxtjtffubsadgw.supabase.co'],
+  },
+};
 
   export default nextConfig;
