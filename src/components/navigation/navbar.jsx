@@ -99,28 +99,28 @@ const Navbar = () => {
           onMouseEnter={() => setShowUserMenu(true)}
           onMouseLeave={() => setShowUserMenu(false)}
         >
-          <div className='flex items-center space-x-2 focus:outline-none cursor-pointer'>
+          <div className='flex items-center space-x-2 focus:outline-none cursor-pointer p-2'>
             <Image
               src='/assets/svgs/user.svg'
               alt='User Profile'
               width={24}
               height={24}
-              className='w-6 h-6'
+              className='w-6 h-6 '
             />
           </div>
 
           {showUserMenu && (
-            <div className='absolute right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50'>
-              <div className='py-2'>
-                <div className='px-4 py-2 text-sm text-gray-700 border-b'>
-                  <div className='font-medium'>
+            <div className='absolute right-0 mt-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50'>
+              <div className='pt-2'>
+                <div className='px-4 py-2 text-[16px] text-[#222222] font-medium border-b'>
+                  <div className='font-semibold text-[16px] px-0'>
                     {user.profile?.name || user.user_metadata?.name || 'User'}
                   </div>
-                  <div className='text-xs text-gray-500'>{user.email}</div>
+                  <div className='text-[14px] text-gray-500 trcaking-wide'>{user.email}</div>
                 </div>
                 <Link
                   href={getUserDashboardLink()}
-                  className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                  className='block px-4 py-3 text-[15px] text-[#222222] font-medium hover:bg-gray-100'
                 >
                   {user.role === 'admin' ? 'Admin Dashboard' : 'My Account'}
                 </Link>
@@ -128,13 +128,13 @@ const Navbar = () => {
                   <>
                     <Link
                       href='/my-account/orders'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      className='block px-4 py-3 text-[15px] text-[#222222] font-medium hover:bg-gray-100'
                     >
                       My Orders
                     </Link>
                     <Link
                       href='/my-account/addresses'
-                      className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                      className='block px-4 py-3 text-[15px] text-[#222222] font-medium hover:bg-gray-100'
                     >
                       My Addresses
                     </Link>
@@ -142,9 +142,9 @@ const Navbar = () => {
                 )}
                 <button
                   onClick={handleLogout}
-                  className='block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100'
+                  className='block w-full cursor-pointer text-left px-4 py-3 text-[15px] text-red-600 hover:bg-gray-100'
                 >
-                  Logout
+                Logout
                 </button>
               </div>
             </div>
@@ -201,7 +201,7 @@ const Navbar = () => {
         </div>
 
         {/* Search */}
-        <div className='flex-1 flex justify-end items-center space-x-2 mt-4 md:mt-0'>
+        <div className='flex-1 flex justify-end items-center space-x-2 mr-5 mt-4 md:mt-0'>
           <Image
             src='/assets/search.svg'
             alt='Search Icon'
