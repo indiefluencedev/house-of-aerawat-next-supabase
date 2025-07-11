@@ -90,11 +90,7 @@ async function ProductsContent({ searchParams }) {
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
       {products.map((product) => (
-        <Link
-          key={product.id}
-          href={`/products/${product.id}`}
-          className='block'
-        >
+        <Link key={product.id} href={`/products/${product.id}`}>
           <ProductCard
             product={{
               id: product.id,
@@ -103,7 +99,7 @@ async function ProductsContent({ searchParams }) {
               image: product.images?.[0] || '/assets/products/cardimage.png',
               category: product.category,
             }}
-            className='h-full'
+            className='hover:shadow-lg transition-shadow duration-300'
           />
         </Link>
       ))}
@@ -111,105 +107,17 @@ async function ProductsContent({ searchParams }) {
   );
 }
 
-// Filter component
-function ProductFilters({ currentCategory, currentSearch }) {
-  const categories = [
-    { id: 'all', name: 'All Products', slug: 'All products' },
-    { id: 1, name: 'Fine Jewellery', slug: 'fine-jewellery' },
-    { id: 2, name: 'Shringaar', slug: 'shringaar' },
-    { id: 3, name: 'Kalapatt', slug: 'kalapatt' },
-    { id: 4, name: 'Crystals', slug: 'crystals' },
-    { id: 5, name: 'Wooden Beads', slug: 'wooden-beads' },
-    { id: 6, name: 'Treasure Gift', slug: 'treasure-gift' },
-  ];
-
-  return (
-    <div className='bg-white p-6 rounded-lg shadow-sm mb-8'>
-      <h2 className='text-lg font-semibold mb-4'>Categories</h2>
-      <div className='flex flex-wrap gap-2'>
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={`/products?category=${encodeURIComponent(category.slug)}`}
-            className={`px-4 py-2 rounded-full text-sm transition-colors duration-200 ${
-              currentCategory === category.slug
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Search component
-function ProductSearch({ currentSearch }) {
-  return (
-    <div className='bg-white p-6 rounded-lg shadow-sm mb-8'>
-      <form method='GET' className='flex gap-4'>
-        <input
-          type='text'
-          name='search'
-          placeholder='Search products...'
-          defaultValue={currentSearch}
-          className='flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
-        />
-        <button
-          type='submit'
-          className='px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200'
-        >
-          Search
-        </button>
-      </form>
-    </div>
-  );
-}
-
 // Main page component
-export default async function ProductsPage({ searchParams }) {
-  const resolvedSearchParams = await searchParams;
-  const currentCategory = resolvedSearchParams.category || 'All products';
-  const currentSearch = resolvedSearchParams.search || '';
+export default function ProductsPage({ searchParams }) {
+  const currentCategory = searchParams.category || 'All products';
+  const currentSearch = searchParams.search || '';
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen'>
       <div className='max-w-7xl mx-auto px-4 py-8'>
-        {/* Header */}
-        <div className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>
-            Our Products
-          </h1>
-          <p className='text-gray-600 max-w-2xl mx-auto'>
-            Discover our exquisite collection of handcrafted jewelry and
-            accessories, each piece telling a unique story of tradition and
-            craftsmanship.
-          </p>
-        </div>
-
-        {/* Breadcrumb */}
-        <nav className='flex items-center space-x-2 text-sm text-gray-600 mb-8'>
-          <Link href='/' className='hover:text-blue-600'>
-            Home
-          </Link>
-          <span>/</span>
-          <span className='text-gray-900'>Products</span>
-        </nav>
-
-        {/* Search */}
-        <ProductSearch currentSearch={currentSearch} />
-
-        {/* Filters */}
-        <ProductFilters
-          currentCategory={currentCategory}
-          currentSearch={currentSearch}
-        />
-
         {/* Products Grid */}
         <Suspense fallback={<ProductsLoading />}>
-          <ProductsContent searchParams={resolvedSearchParams} />
+          <ProductsContent searchParams={searchParams} />
         </Suspense>
       </div>
     </div>
@@ -218,9 +126,8 @@ export default async function ProductsPage({ searchParams }) {
 
 // Generate metadata for SEO
 export async function generateMetadata({ searchParams }) {
-  const resolvedSearchParams = await searchParams;
-  const category = resolvedSearchParams.category || 'All products';
-  const search = resolvedSearchParams.search || '';
+  const category = searchParams.category || 'All products';
+  const search = searchParams.search || '';
 
   let title = 'Products - House of Aerawat';
   let description =

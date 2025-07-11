@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { productService } from '@/lib/services/productService';
+import { ProductService } from '@/lib/services/productService';
 
 /**
  * Verify admin authentication
@@ -84,7 +84,7 @@ export async function verifyAdminAuth() {
 export async function fetchAdminDashboardData(startDate, endDate) {
   try {
     // Get products count
-    const productsResult = await productService.getAllProducts();
+    const productsResult = await ProductService.getAllProducts();
     const totalProducts = productsResult.success
       ? productsResult.products.length
       : 0;
