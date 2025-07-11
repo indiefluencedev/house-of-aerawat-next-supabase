@@ -103,10 +103,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-white border-t-1'>
-      <div className='w-full max-w-5xl flex py-8'>
+    <div className='lg:min-h-screen mx-auto flex lg:items-center justify-center bg-white border-t-1'>
+      <div className='w-full mx-auto lg:max-w-5xl flex py-20 lg:py-8'>
         {/* Left Image */}
-        <div className='w-1/2 flex flex-col items-center justify-center bg-white p-10'>
+        <div className='w-1/2 lg:block hidden flex flex-col items-center justify-center bg-white p-10'>
           <Image
             src='/assets/verticalLogo.jpg'
             alt='House Of Aerawat'
@@ -116,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right Form */}
-        <div className='w-1/2 p-10 mt-10 border-l-2 border-gray-300'>
+        <div className='w-full max-w-md mx-auto border-l-0 lg:w-1/2 px-4 lg:px-10 lg:py-10 lg:mt-10 lg:border-l-2 lg:border-gray-300'>
           <h2 className='text-2xl font-bold mb-6 text-center'>
             Log in to your Account
           </h2>

@@ -203,9 +203,9 @@ export default function MobileNavbar() {
                     ${profileOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}
                   `}
                 >
-                  <a href="#" className="py-2 hover:underline transition-colors duration-200">Account Information</a>
-                  <a href="#" className="py-2 hover:underline transition-colors duration-200">Your Orders</a>
-                  <a href="#" className="py-2 hover:underline transition-colors duration-200">Your Addresses</a>
+                  <a href="/my-account" className="py-2 hover:underline transition-colors duration-200">Account Information</a>
+                  <a href="/my-account/orders" className="py-2 hover:underline transition-colors duration-200">Your Orders</a>
+                  <a href="/my-account/address" className="py-2 hover:underline transition-colors duration-200">Your Addresses</a>
                 </div>
 
                 {["About House Of Aerawat", "Legal", "Get In Touch"].map((item, index) => (

@@ -69,3 +69,12 @@ h1, h2 {
 html, body {
   overflow-x: hidden;
 }
+
+/* Add this to your global CSS if scrollbar-hide is not available */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
